@@ -44,7 +44,6 @@ namespace MalisItemFinder
 
             Game.OnUpdate += Window.OnUpdate;
 
-            Chat.WriteLine(Inventory.Items.FirstOrDefault(x => x.Id == 156831).UniqueIdentity.Instance);
             Chat.RegisterCommand("loadinv", (string command, string[] param, ChatWindow chatWindow) =>
             {
                InventoryManager.RegisterInventoryAsync(false);

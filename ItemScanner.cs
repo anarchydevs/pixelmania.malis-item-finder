@@ -99,6 +99,8 @@ namespace MalisItemFinder
             if (_remainingContainers.Count == 0)
             {
                 _state = BankScannerState.Idle;
+                Chat.WriteLine($"Registering inventory with containers.");
+
                 Main.InventoryManager.RegisterInventoryAsync();
                 return;
             }
