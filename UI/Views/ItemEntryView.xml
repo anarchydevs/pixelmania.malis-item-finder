@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<root>
+	<View>
+		<BitmapView layout_borders="Rect(1,0,0,0)" name="Background">
+			<View view_layout="horizontal">
+				<Button name="Button" min_size="Point(520, 24)" max_size="Point(1, 24)">
+					<BorderView alpha="0" view_layout="horizontal">
+						<BorderView alpha="0" name="ItemSlot" min_size="Point(42, 24)" max_size="Point(42, 24)">
+							<Haxxor/>
+						</BorderView>
+						<View view_layout="horizontal" layout_borders="Rect(0,-10,0,-10)">
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Name" font="SMALL" min_size="Point(246, -1)" max_size="Point(246, -1)" value="Fractured Nightmare"/>
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Id" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(46, -1)" max_size="Point(46, -1)"/>
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Ql" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(28, -1)" max_size="Point(28, -1)"/>
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Location" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(78, -1)" max_size="Point(78, -1)"/>
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Character" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(62, -1)" max_size="Point(62, -1)"/>
+						</View>
+						<HLayoutSpacer/>
+					</BorderView>
+				</Button>
+			</View>
+		</BitmapView>
+		<HLayoutSpacer/>
+	</View>
+</root>

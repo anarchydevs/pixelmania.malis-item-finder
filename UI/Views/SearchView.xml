@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<root>
+	<View>
+			<TextView layout_borders="Rect(8,4,0,0)" color="0x0089C476" name="Search" font="BOLD" feature_flags="TVF_ACCEPT_TXT_INPUT|TVF_ACCEPT_MOUSE_INPUT|TVF_RENDER_SHADOW" min_size="Point(278, 15)" max_size="Point(278, 15)"/>
+	</View>
+</root>

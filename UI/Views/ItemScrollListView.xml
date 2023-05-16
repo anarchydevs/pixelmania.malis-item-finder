@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<root>
+	<View>
+		<BorderView alpha="0" min_size="Point(537, 322)" max_size="Point(537, 322)">
+			<ScrollView h_alignment="LEFT" label="#Behaviour/s" v_scrollbar_mode="auto_reserve" scroll_client="behaviour_s_scroll">
+				<ScrollViewChild name="behaviour_s_scroll" min_size="Point(-1, 15)">
+					<View name="ItemEntryRoot">
+						<Haxxor/>
+					</View>
+					<VLayoutSpacer/>
+				</ScrollViewChild>
+			</ScrollView>
+		</BorderView>
+	</View>
+</root>

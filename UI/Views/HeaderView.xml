@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<root>
+	<View>
+		<BorderView min_size="Point(-1, 26)" max_size="Point(-1, 26)" alpha="0" view_layout="horizontal">
+			<Button min_size="Point(40, 21)" max_size="Point(40, 21)">
+				<BorderView alpha="0">
+					<TextView color="0x00B8B8B8" layout_borders="Rect(4,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" min_size="Point(40, 21)" max_size="Point(40, 21)"/>
+				</BorderView>
+			</Button>
+
+			<Button name="Name" min_size="Point(250, 21)" max_size="Point(250, 21)">
+				<BorderView alpha="0" min_size="Point(250, 21)" max_size="Point(250, 21)">
+					<TextView color="0x00B8B8B8" layout_borders="Rect(4,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" value="Name" min_size="Point(250, -1)" max_size="Point(250, -1)"/>
+				</BorderView>
+			</Button>
+			<BorderView alpha="0">
+				<Button name="Id" min_size="Point(48, 21)" max_size="Point(48, 21)">
+					<BorderView alpha="0" min_size="Point(48, 21)" max_size="Point(48, 21)">
+						<TextView color="0x00B8B8B8" layout_borders="Rect(4,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" value="Id" min_size="Point(48, -1)" max_size="Point(48, -1)"/>
+					</BorderView>
+				</Button>
+			</BorderView>
+			<BorderView alpha="0">
+				<Button name="Ql" min_size="Point(30, 21)" max_size="Point(30, 21)">
+					<BorderView alpha="0" min_size="Point(30, 21)" max_size="Point(30, 21)">
+						<TextView color="0x00B8B8B8" layout_borders="Rect(4,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" value="Ql" min_size="Point(30, -1)" max_size="Point(30, -1)"/>
+					</BorderView>
+				</Button>
+			</BorderView>
+			<BorderView alpha="0">
+				<Button name="Location" min_size="Point(80, 21)" max_size="Point(80, 21)">
+					<BorderView alpha="0" min_size="Point(80, 21)" max_size="Point(80, 21)">
+						<TextView color="0x00B8B8B8" layout_borders="Rect(4,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" value="Location" min_size="Point(80, -1)" max_size="Point(80, -1)"/>
+					</BorderView>
+				</Button>
+			</BorderView>
+			<BorderView alpha="0">
+				<Button name="Character" min_size="Point(74, 21)" max_size="Point(74, 21)">
+					<BorderView alpha="0" min_size="Point(74, 21)" max_size="Point(74, 21)">
+						<TextView color="0x00B8B8B8" layout_borders="Rect(4,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" value="Character" min_size="Point(74, -1)" max_size="Point(74, -1)"/>
+					</BorderView>
+				</Button>
+			</BorderView>
+			<HLayoutSpacer/>
+		</BorderView>
+	</View>
+</root>
