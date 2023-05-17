@@ -31,7 +31,8 @@ namespace MalisItemFinder
 
             if (!DynelManager.LocalPlayer.TryOpenBank())
             {
-                Chat.WriteLine("No valid bank found. Cancelling bank scan.");
+                Chat.WriteLine("No valid bank found. Cancelling bank scan, continuing with inventory scan.");
+                Main.InventoryManager.RegisterInventoryAsync();
                 return;
             }
 
