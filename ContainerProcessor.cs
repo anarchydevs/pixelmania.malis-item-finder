@@ -1,4 +1,5 @@
-﻿using AOSharp.Core.UI;
+﻿using AOSharp.Core;
+using AOSharp.Core.UI;
 using MalisItemFinder;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,8 +11,13 @@ public class ContainerProcessor
 {
     private readonly ConcurrentQueue<Action> _queue = new ConcurrentQueue<Action>();
     private int _containerProcessing = 0;
-   
-    public ContainerProcessor() => _containerProcessing = 0;
+    private bool _nextFrame = false;
+
+    public ContainerProcessor()
+    {
+        _containerProcessing = 0;
+        Game.OnUpdate += FrameLoop;
+    }
 
     public void AddChange(Action change)
     {
@@ -19,15 +25,25 @@ public class ContainerProcessor
 
         if (Interlocked.CompareExchange(ref _containerProcessing, 1, 0) == 0)
         {
-            ProcessQueue();
+            ProcessQueue(_nextFrame);
         }
     }
 
-    private async Task ProcessQueue()
+
+    private void FrameLoop(object sender, float deltaTime)
     {
+        _nextFrame = !_nextFrame;
+    }
+
+    private async Task ProcessQueue(bool frame)
+    {
+        while (_nextFrame == frame)
+        {
+            await Task.Yield();
+        }
+
         while (_queue.TryDequeue(out Action change))
         {
-            await Task.Delay(1);
             change.Invoke();
 
             while (true)
@@ -48,14 +64,4 @@ public class ContainerProcessor
 
         Interlocked.Exchange(ref _containerProcessing, 0);
     }
-    //private async Task ProcessQueue()
-    //{
-    //    while (_queue.TryDequeue(out Action change))
-    //    {
-    //        change.Invoke();
-    //        await Task.Delay(50); // simulate processing time
-    //    }
-
-    //    Interlocked.Exchange(ref _containerProcessing, 0);
-    //}
 }

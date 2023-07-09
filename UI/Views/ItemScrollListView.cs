@@ -11,7 +11,7 @@ namespace MalisItemFinder
 {
     public class ItemScrollListView
     {
-        public Slot SelectedItem = new Slot();
+        public Slot SelectedItem;
 
         private List<ItemEntryView> _itemEntries;
         private View _localRoot;

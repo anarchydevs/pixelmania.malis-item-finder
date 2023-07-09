@@ -59,6 +59,13 @@ namespace MalisItemFinder
         private void SearchClick(object sender, ButtonBase e)
         {
             Chat.WriteLine("Search clicked!");
+
+            if (_itemScrollList.SelectedItem == null)
+            {
+                Chat.WriteLine("You must select a valid item first!");
+                return;
+            }
+
             Main.ItemFinder = new ItemFinder(_itemScrollList.SelectedItem);
             _itemScrollList.RefreshEntryColors();
         }

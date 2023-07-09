@@ -19,6 +19,7 @@ namespace MalisItemFinder
         private List<ItemTrackModel> _sourceMap = new List<ItemTrackModel>();
         private List<ItemTrackModel> _targetMap = new List<ItemTrackModel>();
         private InventoryManager _invManager;
+
         public ItemTracker(InventoryManager invManager)
         {
             _invManager = invManager;
