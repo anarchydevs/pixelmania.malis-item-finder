@@ -89,6 +89,18 @@ namespace MalisItemFinder
             button.SetGfx(ButtonState.Pressed, gfxId);
         }
 
+        public static void SetText(this ComboBox comboBox, string text) => TextInputView_c.SetText(comboBox.Pointer, StdString.Create(text).Pointer);
+
+        public static string GetText(this ComboBox comboBox)
+        {
+            IntPtr text = TextInputView_c.GetText(comboBox.Pointer);
+
+            if (text == IntPtr.Zero)
+                return string.Empty;
+
+            return StdString.FromPointer(text, shouldDispose: false).ToString();
+        }
+
         public static bool Find(this List<Item> items, int lowId, int highId, int ql, out Item item)
         {
             return (item = items.FirstOrDefault((Item x) => x.Id == lowId && x.HighId == highId && x.QualityLevel == ql)) != null;

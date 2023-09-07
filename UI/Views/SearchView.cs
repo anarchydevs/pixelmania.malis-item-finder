@@ -56,7 +56,8 @@ namespace MalisItemFinder
 
             if (Root.FindChild("Dropdown", out _comboBoxView))
             {
-                _comboBoxView.Text = "All";
+
+                _comboBoxView.SetText("All");
             }
 
             if (Root.FindChild("ContainerQueue", out _containerQueue))
@@ -67,9 +68,10 @@ namespace MalisItemFinder
             searchRootView.AddChild(Root, true);
         }
 
-        public string GetCharacter() => _comboBoxView.Text;
+        public string GetCharacter() => _comboBoxView.GetText();
 
         public Dictionary<FilterCriteria, List<SearchCriteria>> GetCriterias() => _criterias;
+       
 
         private void ParseText(string text)
         {
@@ -170,18 +172,7 @@ namespace MalisItemFinder
             }
         }
 
-        public bool OnComboBoxChange()
-        {
-            if (!_comboBoxLoaded)
-                return false;
-
-            var bla = _comboBoxTextCache != _comboBoxView.Text;
-
-            if (bla)
-                _comboBoxTextCache = _comboBoxView.Text;
-
-            return bla;
-        }
+        public bool OnComboBoxChange() => _comboBoxLoaded && (_comboBoxTextCache != (_comboBoxTextCache = _comboBoxView.GetText()));
 
         public void OnUpdate()
         {
