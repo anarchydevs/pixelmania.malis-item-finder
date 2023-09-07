@@ -12,40 +12,33 @@ namespace MalisItemFinder
     public class ItemScrollListView
     {
         public Slot SelectedItem;
-
         private List<ItemEntryView> _itemEntries;
         private View _localRoot;
-        private View _mainWindowRoot;
         private View _itemEntryRoot;
-        private int _precachedElements = 50;
+        public int Count = 50;
         private int _displayedItems;
 
-        public ItemScrollListView(View mainWindowRoot)
+        public ItemScrollListView(View root)
         {
-            _mainWindowRoot = mainWindowRoot;
-            _localRoot = View.CreateFromXml($"{Main.PluginDir}\\UI\\Views\\ItemScrollListView.xml");
-
+            _localRoot = root;
             _localRoot.FindChild("ItemEntryRoot", out _itemEntryRoot);
-            _mainWindowRoot.AddChild(_localRoot, true);
-            _mainWindowRoot.FitToContents();
-
             _itemEntries = new List<ItemEntryView>();
 
-            for (int i = 0; i < _precachedElements; i++)
+            for (int i = 0; i < Count; i++)
             {
                 int color = i % 2 == 0 ? Colors.DarkGrey : Colors.LightGrey;
                 _itemEntries.Add(new ItemEntryView((uint)color, this));
             }
         }
 
-        internal void OnUpdate(object sender, float e)
+        internal void OnUpdate()
         {
-            if (Main.InventoryManager.SearchResults == null)
+            if (Main.MainWindow.SearchResults == null)
                 return;
 
-            Refresh(Main.InventoryManager.SearchResults, Main.Window.GetCurrentHeader());
+            Refresh();
 
-            Main.InventoryManager.SearchResults = null;
+            Main.MainWindow.SearchResults = null;
         }
 
         internal void RefreshEntryColors()
@@ -56,55 +49,22 @@ namespace MalisItemFinder
             SelectedItem = null;
         }
 
-        internal void QueueSearch(List<string> searchTerms)
+        internal void Refresh()
         {
-            if (Main.InventoryManager.SearchInProgress)
-            {
-                Chat.WriteLine("Search already in progress.");
-                return;
-            }
+            var header = Main.MainWindow.TableView.Header.Current;
 
-            Main.InventoryManager.ItemLookup(searchTerms, _precachedElements);
-        }
-
-        internal void Refresh(List<Slot> matchingItems, HeaderButton headerButton)
-        {
-            if (matchingItems.Count > 1)
-            {
-                switch (headerButton.Mode)
-                {
-                    case OrderMode.Name:
-                        matchingItems = ApplyOrder(matchingItems, item => item.ItemInfo.Name, headerButton.Direction).ToList();
-                        break;
-                    case OrderMode.Id:
-                        matchingItems = ApplyOrder(matchingItems, item => item.ItemInfo.Id, headerButton.Direction).ToList();
-                        break;
-                    case OrderMode.Ql:
-                        matchingItems = ApplyOrder(matchingItems, item => item.ItemInfo.Ql, headerButton.Direction).ToList();
-                        break;
-                    case OrderMode.Location:
-                        matchingItems = ApplyOrder(matchingItems, item => item.ItemInfo.Slot.ItemContainer.Root.ToString(), headerButton.Direction).ToList();
-                        break;
-                    case OrderMode.Character:
-                        matchingItems = ApplyOrder(matchingItems, item => item.ItemInfo.Slot.ItemContainer.CharacterInventory.CharName, headerButton.Direction).ToList();
-                        break;
-                    default:
-                        Chat.WriteLine("This shouldn't happen.");
-                        break;
-                }
-            }
-
+            Main.MainWindow.SearchResults.ApplyOrder(header.Mode, header.Direction);
             int itemIndex = 0;
 
-            foreach (var matchingItem in matchingItems)
+            foreach (var matchingItem in Main.MainWindow.SearchResults)
             {
                 if (itemIndex >= _displayedItems)
                 {
-                    var itemEntry = _itemEntries[itemIndex % _precachedElements];
+                    var itemEntry = _itemEntries[itemIndex % Count];
                     _itemEntryRoot.AddChild(itemEntry.Root, true);
                 }
 
-                var updatedItemEntry = _itemEntries[itemIndex % _precachedElements];
+                var updatedItemEntry = _itemEntries[itemIndex % Count];
                 updatedItemEntry.Update(matchingItem);
                 itemIndex++;
             }
@@ -119,9 +79,15 @@ namespace MalisItemFinder
             _displayedItems = itemIndex;
             _itemEntryRoot.FitToContents();
 
-            //Chat.WriteLine($"Results: {_displayedItems}");
-        }
+            RefreshEntryColors();
+        }   
+        
+        internal void Dispose()
+        {
+            foreach (var item in _itemEntries)
+                _itemEntryRoot.RemoveChild(item.Root);
 
-        private IOrderedEnumerable<Slot> ApplyOrder<TKey>(List<Slot> items, Func<Slot, TKey> keySelector, Direction direction) where TKey : IComparable => direction == Direction.Ascending ? items.OrderBy(item => keySelector(item)) : items.OrderByDescending(item => keySelector(item));
+            _itemEntryRoot.FitToContents();
+        }
     }
 }

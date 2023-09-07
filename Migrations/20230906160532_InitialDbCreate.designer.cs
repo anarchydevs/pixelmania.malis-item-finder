@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ItemSqliteDb.Migrations
 {
     [DbContext(typeof(SqliteContext))]
-    [Migration("20230505085342_InitialDbCreate")]
+    [Migration("20230906160532_InitialDbCreate")]
     partial class InitialDbCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

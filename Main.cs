@@ -15,80 +15,106 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using SmokeLounge.AOtomation.Messaging.GameData;
 using System.Runtime.InteropServices;
+using AOSharp.Core.GMI;
 
 namespace MalisItemFinder
 {
     public class Main : AOPluginEntry
     {
-        public static string PluginDir;
-        public static MainWindow Window;
-        internal static InventoryManager InventoryManager;
+        internal static string PluginDir;
+        internal static Settings Settings;
+        internal static MainWindow MainWindow;
+        internal static HelpWindow HelpWindow;
+        internal static Database Database;
         internal static ItemFinder ItemFinder;
         internal static ItemScanner ItemScanner;
-        public Backpack bag;
 
         public override void Run(string pluginDir)
         {
+            //Inventory.Find("XLarge Backpack - MA", out Item s);
+            //Chat.WriteLine(s.UniqueIdentity);
             Chat.WriteLine("- Mali's Item Finder -", ChatColor.Gold);
 
             PluginDir = pluginDir;
 
+            Settings = new Settings($"{PluginDir}\\JSON\\Settings.json");
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyHelper.ResolveAssemblyOnCurrentDomain;
 
-            Window = new MainWindow("MalisItemFinder", $"{PluginDir}\\UI\\Windows\\MainWindow.xml");
-            Window.Show();
+            ToggleMainWindow();
+
+            if (Settings.ShowTutorial)
+            {
+                ToggleHelpWindow();
+                Settings.ShowTutorial = false;
+                Settings.Save();
+            }
 
             ItemScanner = new ItemScanner();
-            InventoryManager = new InventoryManager();
-
-
-            Game.OnUpdate += Window.OnUpdate;
-
-            Chat.RegisterCommand("loadinv", (string command, string[] param, ChatWindow chatWindow) =>
+            Database = new Database();
+          
+            Chat.RegisterCommand("miftoggle", (string command, string[] param, ChatWindow chatWindow) =>
             {
-               InventoryManager.RegisterInventoryAsync(false);
+                ToggleMainWindow();
             });
 
-            Chat.RegisterCommand("regbank", (string command, string[] param, ChatWindow chatWindow) =>
+            Chat.RegisterCommand("mifpreview", (string command, string[] param, ChatWindow chatWindow) =>
             {
-                // InventoryManager.RegisterBank();
+                Settings.ItemPreview = !Settings.ItemPreview;
+                Settings.Save();
             });
 
-            Chat.RegisterCommand("moveitems", (string command, string[] param, ChatWindow chatWindow) =>
+            Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>
             {
-                foreach (Item item in Inventory.Items)
-                    item.MoveToContainer(new Identity(IdentityType.Bank, DynelManager.LocalPlayer.Identity.Instance));
-                //Inventory.Find(287437, out Item bpItem1);
-                //Inventory.Find(287438, out Item bpItem2);
-
-                //bag = Inventory.Backpacks.FirstOrDefault(x => x.Identity == bpItem1.UniqueIdentity);
-                //Backpack targetBag = Inventory.Backpacks.FirstOrDefault(x => x.Identity == bpItem2.UniqueIdentity);
-
-                //if (bag == null)
-                //{
-                //    return;
-                //}
-                //if (targetBag == null)
-                //{
-                //    return;
-                //}
-
-                //if (bag.Items.Count == 0)
-                //{
-                //    foreach (var item in targetBag.Items)
-                //        item.MoveToContainer(bag);
-                //}
-                //else
-                //{
-                //    foreach (var item in bag.Items)
-                //        item.MoveToContainer(targetBag);
-                //}
+                if (param.Length == 1 && Database.TryDeleteInventory(param[0]))
+                {
+                    Chat.WriteLine($"Character Inventory {param[0]} deleted");
+                }
             });
+        }
+
+        internal static void ToggleMainWindow()
+        {
+            try
+            {
+                if (MainWindow != null)
+                {
+                    Game.OnUpdate -= MainWindow.OnUpdate;
+                    MainWindow.Window.Close();
+                    MainWindow = null;
+                    Midi.Play("End");
+                }
+                else
+                {
+                    MainWindow = new MainWindow("MalisItemFinder", $"{PluginDir}\\UI\\Windows\\MainWindow.xml");
+                    MainWindow.Show();
+                    Game.OnUpdate += MainWindow.OnUpdate;
+                    Midi.Play("Start");
+                }
+            }
+            catch (Exception ex)
+            {
+                Chat.WriteLine(ex.Message);
+            }
+        }
+
+        internal static void ToggleHelpWindow()
+        {
+            if (HelpWindow != null)
+            {
+                HelpWindow.Window.Close();
+                HelpWindow = null;
+            }
+            else
+            {
+                HelpWindow = new HelpWindow("MalisItemFinderHelp", $"{PluginDir}\\UI\\Windows\\HelpWindow.xml");
+                HelpWindow.Show();
+            }
         }
 
         public override void Teardown()
         {
-            Window.Dispose();
+            Midi.TearDown();
+            MainWindow.Dispose();
         }
     }
 }

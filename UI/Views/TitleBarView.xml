@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<root>
+	<View>
+		<BorderView alpha="0" min_size="Point(538, 20)" max_size="Point(538, 20)">
+			<View view_layout="horizontal">
+				<HLayoutSpacer/>
+				<TextView font="BOLD" color="0x0089C476" layout_borders="Rect(24,0,0,0)" feature_flags="TVF_RENDER_SHADOW" value="- Mali's Item Finder -"/>
+				<HLayoutSpacer/>
+				<Button name="Info" layout_borders="Rect(0,0,2,0)"/>
+				<Button name="Close" layout_borders="Rect(0,0,2,0)"/>
+			</View>
+		</BorderView>
+	</View>
+</root>

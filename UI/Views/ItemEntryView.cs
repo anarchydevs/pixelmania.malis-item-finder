@@ -5,8 +5,6 @@ using AOSharp.Core.UI;
 using EFDataAccessLibrary.Models;
 using System;
 using System.Collections.Generic;
-using static MalisItemFinder.InventoryManager;
-using static MalisItemFinder.MainWindow;
 
 namespace MalisItemFinder
 {
@@ -41,7 +39,7 @@ namespace MalisItemFinder
                 _background.SetLocalColor(_localColor);
             }
 
-            _itemEntryData = new ItemEntryData(itemSlot, name, id, ql, location,character);
+            _itemEntryData = new ItemEntryData(itemSlot, name, id, ql, location, character);
         }
 
         private void OnEntryClicked(object sender, ButtonBase e)
@@ -61,31 +59,23 @@ namespace MalisItemFinder
         internal void Update(Slot itemInfo)
         {
             _itemLookup = itemInfo;
-            string containerText;
 
-            var itemContainer = _itemLookup.ItemInfo.Slot.ItemContainer;
+            ItemContainer rootContainer = _itemLookup.ItemContainer;
 
-            if (itemContainer.Root != itemContainer.ContainerInstance)
-            {
-                containerText = $"{itemContainer.Root} (C)";
-            }
-            else
-            {
-                containerText = itemContainer.ContainerInstance.ToString();
-            }
+            var affix = rootContainer.Root != rootContainer.ContainerInstance ? $" [B]" : $"";
+            string itemLocationText = rootContainer.Root + affix;
 
             _itemEntryData.SetText(
                 _itemLookup.ItemInfo.Name, 
                 _itemLookup.ItemInfo.LowInstance.ToString(), 
                 _itemLookup.ItemInfo.Ql.ToString(), 
-                containerText,
-                _itemLookup.ItemInfo.Slot.ItemContainer.CharacterInventory.CharName
-                );
+                itemLocationText,
+                _itemLookup.ItemInfo.Slot.ItemContainer.CharacterInventory.CharName);
 
-            if (!Settings.ItemPreview)
+            if (!Main.Settings.ItemPreview)
                 return;
 
-            if (!(DummyItem.CreateDummyItemID(_itemLookup.ItemInfo.LowInstance, _itemLookup.ItemInfo.HighInstance, _itemLookup.ItemInfo.Ql, out _dummyItemId)))
+            if (!DummyItem.CreateDummyItemID(_itemLookup.ItemInfo.LowInstance, _itemLookup.ItemInfo.HighInstance, _itemLookup.ItemInfo.Ql, out _dummyItemId))
                 return;
 
             _itemEntryData.AddItem(_dummyItemId);

@@ -29,4 +29,5 @@ public enum ContainerId
     MailTerminal = 51059,
     Organization = 57002,
     Bank = 57005,
+    GMI = 51060,
 }

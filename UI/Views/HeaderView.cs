@@ -12,10 +12,11 @@ namespace MalisItemFinder
         public View Root;
         public HeaderButton Current;
         public HeaderButton _cached;
+        private bool _headerUpdate = false;
 
         public HeaderView(View headerRootView)
         {
-            Root = View.CreateFromXml($"{Main.PluginDir}\\UI\\Views\\HeaderView.xml");
+            Root = headerRootView;
 
             Current = new HeaderButton();
             _cached = new HeaderButton();
@@ -30,7 +31,20 @@ namespace MalisItemFinder
 
             if (Root.FindChild("Character", out Button character)) { SetButtonParams(character, OrderMode.Character); }
 
-            headerRootView.AddChild(Root, true);
+        }
+
+        public bool TriggerRefresh()
+        {
+            if (!Main.MainWindow.SearchInProgress)
+                return false;
+
+            if (!FilterModeUpdate())
+                return false;
+
+            if (Main.MainWindow.SearchResults == null)
+                return false;
+
+            return true;
         }
 
         private void SetButtonParams(Button button, OrderMode mode)
@@ -46,7 +60,6 @@ namespace MalisItemFinder
             if (Current.Mode == tag)
             {
                 Current.SwitchDirection();
-                Chat.WriteLine(Current.Direction);
             }
             else
             {
@@ -54,8 +67,18 @@ namespace MalisItemFinder
                 Current.Direction = Direction.Ascending;
             }
 
-            Chat.WriteLine("Header Button clicked.");
+            Midi.Play("Click");
+            _headerUpdate = true;
+        }
 
+        internal bool OnHeaderChange()
+        {
+            if (!_headerUpdate)
+                return false;
+
+            _headerUpdate = false;
+
+            return true;
         }
 
         public bool FilterModeUpdate()

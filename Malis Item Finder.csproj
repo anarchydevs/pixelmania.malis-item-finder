@@ -36,10 +36,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AOSharp.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AOSharpSDK.1.0.27\lib\net48\AOSharp.Common.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\aosharp\AOSharp\bin\Debug\AOSharp.Common.dll</HintPath>
     </Reference>
     <Reference Include="AOSharp.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\AOSharpSDK.1.0.27\lib\net48\AOSharp.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\aosharp\AOSharp\bin\Debug\AOSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DeepCloner, Version=0.10.0.0, Culture=neutral, PublicKeyToken=dc0b95cf99bf4e99, processorArchitecture=MSIL">
+      <HintPath>packages\DeepCloner.0.10.4\lib\net40\DeepCloner.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -151,19 +156,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataAccess\SqliteContext.cs" />
-    <Compile Include="InventoryManager.cs" />
-    <Compile Include="AssemblyHelper.cs" />
-    <Compile Include="ContainerProcessor.cs" />
-    <Compile Include="ItemTracker.cs" />
-    <Compile Include="Midi.cs" />
-    <Compile Include="ItemFinder.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Migrations\20230505085342_InitialDbCreate.cs" />
-    <Compile Include="Migrations\20230505085342_InitialDbCreate.designer.cs">
-      <DependentUpon>20230505085342_InitialDbCreate.cs</DependentUpon>
+    <Compile Include="Database.cs" />
+    <Compile Include="Migrations\20230906160532_InitialDbCreate.cs" />
+    <Compile Include="Migrations\20230906160532_InitialDbCreate.designer.cs">
+      <DependentUpon>20230906160532_InitialDbCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\SqliteContextModelSnapshot.cs" />
+    <Compile Include="Models\FilterCriteria.cs" />
+    <Compile Include="DataAccess\SqliteContext.cs" />
+    <Compile Include="Utils\EventHandler.cs" />
+    <Compile Include="Utils\AssemblyHelper.cs" />
+    <Compile Include="DatabaseProcessor.cs" />
+    <Compile Include="ItemTracker.cs" />
+    <None Include="JSON\Settings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <Compile Include="UI\Views\TitleBarView.cs" />
+    <Compile Include="UI\Windows\HelpWindow.cs" />
+    <Compile Include="Utils\Midi.cs" />
+    <Compile Include="ItemFinder.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Models\CharacterInventory.cs" />
     <Compile Include="Models\ItemContainer.cs" />
     <Compile Include="Models\ItemInfo.cs" />
@@ -171,10 +183,11 @@
     <Compile Include="Settings.cs" />
     <Compile Include="UI\Views\HeaderView.cs" />
     <Compile Include="ItemScanner.cs" />
+    <Compile Include="UI\Views\TableView.cs" />
     <Compile Include="UI\Views\SearchView.cs" />
     <Compile Include="UI\Views\ItemScrollListView.cs" />
     <Compile Include="UI\Views\ItemEntryView.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Compile Include="UI\Windows\MainWindow.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -185,6 +198,12 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Sound\Start.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Sound\End.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sound\Click.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -200,7 +219,22 @@
     <Content Include="UI\Textures\004_MIFScanButton.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="UI\Textures\005_MIFHelpBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Textures\006_MIFHelpButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Textures\007_MIFCloseButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="UI\Views\HeaderView.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Views\TitleBarView.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Views\TableView.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UI\Views\SearchView.xml">
@@ -210,6 +244,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UI\Views\ItemEntryView.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Windows\HelpWindow.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="UI\Windows\MainWindow.xml">

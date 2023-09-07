@@ -18,12 +18,47 @@ namespace MalisItemFinder
     {
         public static void LoadCustomTextures(string path, int startId)
         {
-            DirectoryInfo textureDir = new DirectoryInfo(path);
-
-            foreach (var file in textureDir.GetFiles("*.png").OrderBy(x => x.Name))
+            try
             {
-                GuiResourceManager.CreateGUITexture(file.Name.Replace(".png", "").Remove(0, 4), startId++, file.FullName);
+                DirectoryInfo textureDir = new DirectoryInfo(path);
+
+                foreach (var file in textureDir.GetFiles("*.png").OrderBy(x => x.Name))
+                    GuiResourceManager.CreateGUITexture(file.Name.Replace(".png", "").Remove(0, 4), startId++, file.FullName);
             }
+            catch
+            {
+            }
+        }
+
+        private static Dynel FindNearestBankDynel() => DynelManager.AllDynels
+            .Where(x => x.Name.Contains("Bank") && x.Identity.Type == IdentityType.Terminal)
+            .OrderBy(x => Vector3.Distance(DynelManager.LocalPlayer.Position, x.Position))
+            .FirstOrDefault();
+
+        public static bool BankIsNearby(out Dynel dynel)
+        {
+            dynel = null;
+
+            if (Inventory.Find("Portable Bank Terminal", out _))
+                return true;
+
+
+            dynel = FindNearestBankDynel();
+
+            return dynel != null && Vector3.Distance(DynelManager.LocalPlayer.Position, dynel.Position) < 3f;
+        }
+
+        public static bool TryOpenBank()
+        {
+            if (!BankIsNearby(out Dynel dynel))
+                return false;
+
+            if (Inventory.Find("Portable Bank Terminal", out Item item))
+                item.Use();
+            else
+                dynel.Use();
+
+            return true;
         }
 
         public static unsafe string GetItemName(int lowId, int highId, int ql)
@@ -70,5 +105,6 @@ namespace MalisItemFinder
         public static readonly List<int> Inventory = Enumerable.Range(64, 94).ToList();
         public static readonly List<int> Bank = Enumerable.Range(0, 102).ToList();
         public static readonly List<int> Default = Enumerable.Range(0, 21).ToList();
+        public static readonly List<int> GMI = Enumerable.Range(0, 21).ToList();
     }
 }

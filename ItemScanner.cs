@@ -14,38 +14,43 @@ namespace MalisItemFinder
         private BankScannerState _state = BankScannerState.Idle;
         private List<Item> _remainingContainers = new List<Item>();
         private Identity _bankIdentity = new Identity(IdentityType.Bank, DynelManager.LocalPlayer.Identity.Instance);
-        private List<Item> _currentBankBags;
-        private List<Item> _currentInvBags;
-        private AutoResetInterval _dbUpdateTimer;
-        private int _dbUpdateDelay => 125 * (Inventory.NumFreeSlots - 1);
-
+        private List<Identity> _currentBankBags;
+        private List<Identity> _currentInvBags;
+  
         internal void Scan()
         {
-            Chat.WriteLine("Initialized item scan");
+            Chat.WriteLine("Performing Deep Scan");
 
             if (_state != BankScannerState.Idle)
             {
-                Chat.WriteLine("Bank scan already in progress.");
-                return;
-            }
-
-            if (!DynelManager.LocalPlayer.TryOpenBank())
-            {
-                Chat.WriteLine("No valid bank found. Cancelling bank scan, continuing with inventory scan.");
-                Main.InventoryManager.RegisterInventoryAsync();
+                Chat.WriteLine("Deep scan already in progress.");
                 return;
             }
 
             Game.OnUpdate += OnUpdate;
 
+            if (!Utils.BankIsNearby(out _))
+            {
+                Chat.WriteLine("Bank not found. Scanning inventory / gmi.");
+                ScanRest();
+                return;
+            }
+
+            if (Inventory.NumFreeSlots < 2)
+            {
+                Chat.WriteLine("Need at least two inventory slots.");
+                return;
+            }
+
             _state = BankScannerState.InitOpeningBank;
         }
 
-        public  void OnUpdate(object sender, float e)
+        public void OnUpdate(object sender, float e)
         {
             if (_state == BankScannerState.Idle)
             {
-                Game.OnUpdate -= OnUpdate;  
+                ScanRest();
+                Game.OnUpdate -= OnUpdate;
                 return;
             }
 
@@ -72,7 +77,7 @@ namespace MalisItemFinder
             }
         }
 
-        private  void FinishOpeningBank()
+        private void FinishOpeningBank()
         {
             if (!Inventory.Bank.IsOpen)
                 return;
@@ -84,13 +89,10 @@ namespace MalisItemFinder
 
         private  void InitOpeningBank()
         {
-            if (!DynelManager.LocalPlayer.TryOpenBank())
-            {
+            if (Inventory.Bank.IsOpen || Utils.TryOpenBank())
+                _state = BankScannerState.FinishOpeningBank;
+            else
                 _state = BankScannerState.Idle;
-                return;
-            }
-
-            _state = BankScannerState.FinishOpeningBank;
         }
 
         public  void InitMovingToInventory()
@@ -102,18 +104,16 @@ namespace MalisItemFinder
                 _state = BankScannerState.Idle;
                 Chat.WriteLine($"Registering inventory with containers.");
 
-                Main.InventoryManager.RegisterInventoryAsync();
+                Main.Database.RegisterInventory();
                 return;
             }
 
-            _currentBankBags = new List<Item>();
-
-            _dbUpdateTimer = new AutoResetInterval(_dbUpdateDelay);
+            _currentBankBags = new List<Identity>();
 
             foreach (Item item in _remainingContainers.Take(Inventory.NumFreeSlots - 1).ToList())
             {
                 item.MoveToInventory();
-                _currentBankBags.Add(item);
+                _currentBankBags.Add(item.UniqueIdentity);
                 _remainingContainers.Remove(item);
             }
 
@@ -122,57 +122,47 @@ namespace MalisItemFinder
 
         private  void FinishMovingToInventory()
         {
-            _currentInvBags = new List<Item>();
+            var items = Inventory.Items.Where(x => _currentBankBags.Contains(x.UniqueIdentity));
 
-            foreach (var s in _currentBankBags)
-            {
-                var bag = Inventory.Items.FirstOrDefault(x => x.UniqueIdentity == s.UniqueIdentity);
+            if (items.Count() != _currentBankBags.Count())
+                return;
 
-                if (bag == null)
-                    return;
-                else
-                    _currentInvBags.Add(bag);
-            }
+            _currentInvBags = new List<Identity>();
 
-            foreach (var bag in _currentInvBags)
-            {
-                bag.Use();
-                bag.Use();
-            }
-
-            _dbUpdateTimer.Reset();
+            items.PeekBags();
+            _currentInvBags.AddRange(items.Select(x => x.UniqueIdentity));
 
             _state = BankScannerState.InitMovingToBank;
         }
 
         private  void InitMovingToBank()
         {
-            if (!_dbUpdateTimer.Elapsed)
+            var bags = Inventory.Backpacks.Where(x => _currentInvBags.Contains(x.Identity));
+
+            if (bags.Count() == 0 || bags.Any(x => !x.IsOpen))
                 return;
 
-            if (_currentInvBags.Any(s => !Inventory.Backpacks.FirstOrDefault(x => x.Identity == s.UniqueIdentity).IsOpen))
-                return;
-
-            foreach (var bag in _currentInvBags)
-            {
+            foreach (var bag in Inventory.Items.Where(x => _currentInvBags.Contains(x.UniqueIdentity)))
                 bag.MoveToContainer(_bankIdentity);
-            }
-
-            _dbUpdateTimer.Reset();
-            _currentInvBags = null;
 
             _state = BankScannerState.FinishMovingToBank;
+
         }
 
-        private  void FinishMovingToBank()
+        private void FinishMovingToBank()
         {
-            if (!_dbUpdateTimer.Elapsed)
+            if (Inventory.Bank.Items.FirstOrDefault(x => x.UniqueIdentity == _currentBankBags.LastOrDefault()) == null)
                 return;
 
-            if (_currentBankBags.Any(c => Inventory.Items.FirstOrDefault(x => x.UniqueIdentity == c.UniqueIdentity) != null))
-                return;
-
+            _currentInvBags = null;
             _state = BankScannerState.InitMovingToInventory;
+        }
+
+        private void ScanRest()
+        {
+            Main.Database.RegisterInventory();
+            Inventory.Items.PeekBags();
+            Main.Database.RegisterGMI();
         }
     }
 }
@@ -185,5 +175,5 @@ public enum BankScannerState
     InitMovingToInventory,
     FinishMovingToInventory,
     InitMovingToBank,
-    FinishMovingToBank
+    FinishMovingToBank,
 }

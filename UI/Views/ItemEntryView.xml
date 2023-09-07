@@ -9,8 +9,8 @@
 							<Haxxor/>
 						</BorderView>
 						<View view_layout="horizontal" layout_borders="Rect(0,-10,0,-10)">
-							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Name" font="SMALL" min_size="Point(246, -1)" max_size="Point(246, -1)" value="Fractured Nightmare"/>
-							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Id" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(46, -1)" max_size="Point(46, -1)"/>
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Name" font="SMALL" min_size="Point(230, -1)" max_size="Point(230, -1)" value="Fractured Nightmare"/>
+							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Id" font="SMALL" layout_borders="Rect(18,0,0,0)" min_size="Point(46, -1)" max_size="Point(46, -1)"/>
 							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Ql" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(28, -1)" max_size="Point(28, -1)"/>
 							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Location" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(78, -1)" max_size="Point(78, -1)"/>
 							<TextView color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW" name="Character" font="SMALL" layout_borders="Rect(2,0,0,0)" min_size="Point(62, -1)" max_size="Point(62, -1)"/>

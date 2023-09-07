@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<Root>
+	<View>
+		<BitmapView name="Logo">
+			<View view_layout="horizontal" layout_borders="Rect(3,2,3,0)">
+				<HLayoutSpacer/>
+				<TextView layout_borders="Rect(15,1,0,0)" value="- Welcome to Mali's Item Finder -" font="BOLD" color="0x0089C476" feature_flags="TVF_RENDER_SHADOW"/>
+				<HLayoutSpacer/>
+				<Button layout_borders="Rect(0,1,0,0)" name="Close"/>				
+			</View>
+			<View layout_borders="Rect(0,20,0,0)">
+				<Haxxor/>
+			</View>
+			<View>
+				<View view_layout="horizontal" layout_borders="Rect(5,4,4,0)">
+					<Button name="Search"/>
+					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)" value=" - Move Item To Inventory" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
+				</View>
+				<View view_layout="horizontal" layout_borders="Rect(5,4,4,0)">
+					<Button name="Scan"/>
+					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)" value=" - Deep Scan Inv / Bank / GMI" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
+				</View>
+				<View view_layout="horizontal" layout_borders="Rect(5,4,4,0)">
+					<TextView name="Mode" min_size="Point(20,20)" layout_borders="Rect(0,2,0,0)" max_size="Point(20,20)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x0089C476" value="0"/>
+					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)"  value=" - Database Queue" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
+				</View>
+			</View>
+			<TextView  layout_borders="Rect(5,2,5,0)" color="0x00e2e2e2" feature_flags="TVF_MULTILINE|TVF_RENDER_SHADOW" name="Text"/>
+			<VLayoutSpacer/>
+		</BitmapView>		
+	</View>
+</Root>

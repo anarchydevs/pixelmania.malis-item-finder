@@ -8,18 +8,22 @@ using EFDataAccessLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MalisItemFinder
 {
     public class MainWindow : AOSharpWindow
     {
-        private ItemScrollListView _itemScrollList;
-        private SearchView _searchView;
-        private HeaderView _headerView;
+        internal TitleBarView TitleBarView;
+        internal SearchView SearchView;
+        internal TableView TableView;
+        internal bool SearchInProgress;
+        internal List<Slot> SearchResults;
 
         public MainWindow(string name, string path, WindowStyle windowStyle = WindowStyle.Popup, WindowFlags flags = WindowFlags.AutoScale | WindowFlags.NoFade) : base(name, path, windowStyle, flags)
         {
             Utils.LoadCustomTextures($"{Main.PluginDir}\\UI\\Textures\\", 1525831);
+            SearchResults = new List<Slot>();
         }
 
         protected override void OnWindowCreating()
@@ -29,26 +33,14 @@ namespace MalisItemFinder
                 if (Window.FindView("Background", out BitmapView background))
                     background.SetBitmap(TextureId.MainBackground);
 
-                if (Window.FindView("HeaderRoot", out View headerRoot))
-                    _headerView = new HeaderView(headerRoot);
-
-                if (Window.FindView("ScrollListRoot", out View scrollListRoot))
-                    _itemScrollList = new ItemScrollListView(scrollListRoot);
+                if (Window.FindView("TitleBarRoot", out View titleBar))
+                    TitleBarView = new TitleBarView(titleBar);
 
                 if (Window.FindView("SearchRoot", out View searchRoot))
-                    _searchView = new SearchView(searchRoot, _itemScrollList);
+                    SearchView = new SearchView(searchRoot);
 
-                if (Window.FindView("Scan", out Button scan))
-                {
-                    scan.Clicked = ScanClick;
-                    scan.SetAllGfx(TextureId.ScanButton);
-                }
-
-                if (Window.FindView("Search", out Button search))
-                {
-                    search.Clicked = SearchClick;
-                    search.SetAllGfx(TextureId.SearchButton);
-                }
+                if (Window.FindView("TableRoot", out View tableRoot))
+                    TableView = new TableView(tableRoot);
             }
             catch (Exception ex)
             {
@@ -56,71 +48,63 @@ namespace MalisItemFinder
             }
         }
 
-        private void SearchClick(object sender, ButtonBase e)
-        {
-            Chat.WriteLine("Search clicked!");
-
-            if (_itemScrollList.SelectedItem == null)
-            {
-                Chat.WriteLine("You must select a valid item first!");
-                return;
-            }
-
-            Main.ItemFinder = new ItemFinder(_itemScrollList.SelectedItem);
-            _itemScrollList.RefreshEntryColors();
-        }
-
-        private void ScanClick(object sender, ButtonBase e)
-        {
-            Main.ItemScanner.Scan();
-        }
-
         public void OnUpdate(object sender, float e)
         {
-            SearchViewUpdate();
-            HeaderViewUpdate();
-            _itemScrollList.OnUpdate(sender, e);
+            SearchView.OnUpdate();
+            TableView.OnUpdate();
+
+            if (SearchView.OnComboBoxChange())
+            {
+                ItemLookup();
+            }
+
+            if (SearchView.OnSearchChange() || TableView.Header.OnHeaderChange())
+            {
+                TableView.ItemScrollList.RefreshEntryColors();
+                ItemLookup();
+            }
         }
 
-        private void HeaderViewUpdate()
+        internal void ItemLookup()
         {
-            if (!Main.InventoryManager.SearchInProgress)
+            if (SearchInProgress || DatabaseProcessor.IsOccupied())
                 return;
 
-            if (!_headerView.FilterModeUpdate())
-                return;
+            string character = SearchView.GetCharacter();
+            IEnumerable<string> searchTerms = SearchView.GetKeywords();
+            Dictionary<FilterCriteria, List<SearchCriteria>> criterias = SearchView.GetCriterias();
+            int maxElements = TableView.ItemScrollList.Count;
+            SearchInProgress = true;
 
-            _itemScrollList.Refresh(Main.InventoryManager.SearchResults, _headerView.Current);
+            Task.Run(() =>
+            {
+                SearchResults = Main.Database.ItemLookup(character, searchTerms, criterias, maxElements);
+                SearchInProgress = false;
+            });
         }
 
-        private void SearchViewUpdate()
-        {
-            if (!_searchView.OnTextUpdate(out List<string> keywords))
-                return;
-
-            _itemScrollList.QueueSearch(keywords);
-        }
-
-
-        public HeaderButton GetCurrentHeader() => _headerView.Current;
+        public HeaderButton GetCurrentHeader() => TableView.Header.Current;
 
         public void Dispose()
         {
         }
+    }
 
-        internal static class TextureId
-        {
-            internal const int MainBackground = 1525831;
-            internal const int ItemEntryBackground = 1525832;
-            internal const int ScanButton = 1525833;
-            internal const int SearchButton = 1525834;
-        }
+    internal static class TextureId
+    {
+        internal const int MainBackground = 1525831;
+        internal const int ItemEntryBackground = 1525832;
+        internal const int ScanButton = 1525833;
+        internal const int SearchButton = 1525834;
+        internal const int HelpBackground = 1525835;
+        internal const int InfoButton = 1525836;
+        internal const int CloseButton = 1525837;
+    }
 
-        internal static class Colors
-        {
-            internal const int DarkGrey = 0x2A2A2A;
-            internal const int LightGrey = 0x2E2E2E;
-            internal const int Green = 0x537747;
-        }
+    internal static class Colors
+    {
+        internal const int DarkGrey = 0x2A2A2A;
+        internal const int LightGrey = 0x2E2E2E;
+        internal const int Green = 0x537747;
     }
 }

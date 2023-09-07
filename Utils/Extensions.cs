@@ -13,40 +13,75 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using static MalisItemFinder.InventoryManager;
+using static MalisItemFinder.Database;
 
 namespace MalisItemFinder
 {
     public static class Extensions
     {
-        public static bool BankIsNearby(this LocalPlayer localPlayer, out Dynel bank)
+        private static void ApplyOrder<TKey>(this List<Slot> items, Func<Slot, TKey> keySelector, Direction direction) where TKey : IComparable
         {
-            bank = DynelManager.AllDynels.FirstOrDefault(x => x.Name.Contains("Bank"));
-
-            if (bank != null && Vector3.Distance(DynelManager.LocalPlayer.Position, bank.Position) < 5f)
-                return true;
-
-            return false;
-        }
-
-        public static bool TryOpenBank(this LocalPlayer localPlayer)
-        {
-            if (Inventory.Find("Portable Bank Terminal", out Item item))
+            if (direction == Direction.Ascending)
             {
-                item.Use();
-            }
-            else if (localPlayer.BankIsNearby(out Dynel bankDynel))
-            {
-                bankDynel.Use();
+                items.Sort((a, b) => keySelector(a).CompareTo(keySelector(b)));
             }
             else
             {
-                return false;
+                items.Sort((a, b) => keySelector(b).CompareTo(keySelector(a)));
             }
-
-            return true;
         }
 
+        public static void ApplyCriteria(this List<Slot> matchingItems, Dictionary<FilterCriteria, List<SearchCriteria>> criterias)
+        {
+            foreach (var filter in criterias)
+            {
+                switch (filter.Key)
+                {
+                    case FilterCriteria.Ql:
+                        foreach (var qlCriteria in filter.Value)
+                            matchingItems.RemoveAll(x => !qlCriteria.MeetsReqs(x.ItemInfo.Ql));
+                        break;
+                    case FilterCriteria.Id:
+                        foreach (var idCriteria in filter.Value)
+                            matchingItems.RemoveAll(x => !idCriteria.MeetsReqs(x.ItemInfo.LowInstance));
+                        break;
+                    case FilterCriteria.Location:
+                        foreach (var idCriteria in filter.Value)
+                            matchingItems.RemoveAll(x => !idCriteria.MeetsReqs(x.ItemInfo.Slot.ItemContainer.ContainerInstance));
+                        break;
+                        // Add other cases for different filter criteria as needed
+                }
+            }
+        }
+
+        public static void ApplyOrder(this List<Slot> matchingItems, OrderMode orderMode, Direction direction)
+        {
+            if (matchingItems.Count() < 1)
+                return;
+
+            switch (orderMode)
+            {
+                case OrderMode.Name:
+                    matchingItems.ApplyOrder(item => item.ItemInfo.Name, direction);
+                    break;
+                case OrderMode.Id:
+                    matchingItems.ApplyOrder(item => item.ItemInfo.LowInstance, direction);
+                    break;
+                case OrderMode.Ql:
+                    matchingItems.ApplyOrder(item => item.ItemInfo.Ql, direction);
+                    break;
+                case OrderMode.Location:
+                    matchingItems.ApplyOrder(item => item.ItemInfo.Slot.ItemContainer.ContainerInstance, direction);
+                    break;
+                case OrderMode.Character:
+                    matchingItems.ApplyOrder(item => item.ItemInfo.Slot.ItemContainer.CharacterInventory.CharName, direction);
+                    break;
+                default:
+                    Chat.WriteLine("This shouldn't happen.");
+                    break;
+            }
+        }
+       
         public static void SetAllGfx(this Button button, int gfxId)
         {
             button.SetGfx(ButtonState.Raised, gfxId);
@@ -65,6 +100,15 @@ namespace MalisItemFinder
         }
 
         public static bool IsContainer(this ContainerId id) => Enum.IsDefined(typeof(ContainerId), id);
+    
+        public static void PeekBags(this IEnumerable<Item> items)
+        {
+            foreach (var item in items.Where(x=>x.UniqueIdentity.Type == IdentityType.Container))
+            {
+                item.Use();
+                item.Use();
+            }
+        }
 
         public static Backpack SlotHandleToBackpack(this Identity identity)
         {
@@ -92,6 +136,8 @@ namespace MalisItemFinder
                     return ContainerRanges.Inventory;
                 case ContainerId.Bank:
                     return ContainerRanges.Bank;
+                case ContainerId.GMI:
+                    return ContainerRanges.GMI;
                 default:
                     return ContainerRanges.Default;
             }

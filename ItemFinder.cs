@@ -15,7 +15,6 @@ namespace MalisItemFinder
         private ItemFinderState _state = ItemFinderState.Idle;
         private Slot _itemToFind;
         private List<Item> _activeItemList;
-        private AutoResetInterval _bagUpdateTimer = new AutoResetInterval(1000);
 
         public ItemFinder(Slot itemToFind)
         {
@@ -28,7 +27,6 @@ namespace MalisItemFinder
         {
             try
             {
-
                 if (Inventory.NumFreeSlots == 0)
                 {
                     Chat.WriteLine("Need at least one free inventory slot to perform item find.");
@@ -43,8 +41,25 @@ namespace MalisItemFinder
 
                 if (_itemToFind.ItemInfo.Slot.ItemContainer.CharacterInventory.CharName != DynelManager.LocalPlayer.Name)
                 {
-                    Chat.WriteLine("This item is registered on a different character. Item find cancelled.");
+                    Chat.WriteLine("Item is registered on a different character.");
                     return;
+                }
+
+                switch (_itemToFind.ItemInfo.Slot.ItemContainer.Root)
+                {
+                    //case ContainerId.Inventory:
+                    //    Chat.WriteLine("Item is already located in your inventory.");
+                    //    return;
+                    case ContainerId.ArmorPage:
+                    case ContainerId.WeaponPage:
+                    case ContainerId.SocialPage:
+                    case ContainerId.ImplantPage:
+                        Chat.WriteLine("You are currently wearing this item.");
+                        return;
+                    case ContainerId.GMI:
+                        Chat.WriteLine("Item is located in your GMI.");
+                        return;
+
                 }
 
                 _state = ItemFinderState.DetermineItemSource;
@@ -52,6 +67,7 @@ namespace MalisItemFinder
             catch (Exception ex)
             {
                 Chat.WriteLine(ex.Message);
+                Chat.WriteLine("Query");
             }
 
         }
@@ -103,7 +119,7 @@ namespace MalisItemFinder
                     _state = ItemFinderState.InitItemIsInInventory;
                     break;
                 case ContainerId.Bank:
-                    _state = DynelManager.LocalPlayer.TryOpenBank() ? ItemFinderState.ItemIsInBankState : _state = ItemFinderState.Idle;
+                    _state = Utils.TryOpenBank() ? ItemFinderState.ItemIsInBankState : _state = ItemFinderState.Idle;
                     break;
                 default:
                     Chat.WriteLine("This shouldn't happen (DetermineItemSourceState)");
@@ -118,7 +134,7 @@ namespace MalisItemFinder
             if (itemSourceBag == null)
                 return;
 
-            if (!itemSourceBag.IsOpen || !_bagUpdateTimer.Elapsed)
+            if (!itemSourceBag.IsOpen)
                 return;
 
             if (!itemSourceBag.Items.Find(_itemToFind, out Item item))
@@ -144,7 +160,6 @@ namespace MalisItemFinder
                 item.Use();
             }
 
-            _bagUpdateTimer.Reset();
             _state = ItemFinderState.InitItemIsInInventoryContainerState;
         }
 
