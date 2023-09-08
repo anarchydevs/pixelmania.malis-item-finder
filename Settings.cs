@@ -32,13 +32,16 @@ namespace MalisItemFinder
                 Settings settings = JsonConvert.DeserializeObject<Settings>(json);
 
                 ItemPreview = settings.ItemPreview; 
-                ShowTutorial = settings.ShowTutorial;   
+                ShowTutorial = settings.ShowTutorial;
+                return;
             }
-            else
-            {
-                ItemPreview = true;
-                ShowTutorial = true;
-            }
+            string directoryPath = Path.GetDirectoryName(_path);
+
+            if (!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
+
+            ItemPreview = true;
+            ShowTutorial = true;
         }
 
         public void Save()
