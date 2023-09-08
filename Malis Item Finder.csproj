@@ -166,9 +166,6 @@
     <Compile Include="Utils\AssemblyHelper.cs" />
     <Compile Include="DatabaseProcessor.cs" />
     <Compile Include="ItemTracker.cs" />
-    <None Include="JSON\Settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Compile Include="UI\Views\TitleBarView.cs" />
     <Compile Include="UI\Windows\HelpWindow.cs" />
     <Compile Include="Utils\Midi.cs" />
@@ -194,7 +191,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="JSON\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Sound\Start.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

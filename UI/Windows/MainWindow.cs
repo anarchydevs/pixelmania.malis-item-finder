@@ -19,6 +19,7 @@ namespace MalisItemFinder
         internal TableView TableView;
         internal bool SearchInProgress;
         internal List<Slot> SearchResults;
+        internal int MaxElements = 50;
 
         public MainWindow(string name, string path, WindowStyle windowStyle = WindowStyle.Popup, WindowFlags flags = WindowFlags.AutoScale | WindowFlags.NoFade) : base(name, path, windowStyle, flags)
         {
@@ -55,17 +56,17 @@ namespace MalisItemFinder
 
             if (SearchView.OnComboBoxChange())
             {
-                ItemLookup();
+                Refresh();
             }
 
             if (SearchView.OnSearchChange() || TableView.Header.OnHeaderChange())
             {
                 TableView.ItemScrollList.RefreshEntryColors();
-                ItemLookup();
+                Refresh();
             }
         }
 
-        internal void ItemLookup()
+        internal void Refresh()
         {
             if (SearchInProgress || DatabaseProcessor.IsOccupied())
                 return;
@@ -73,7 +74,7 @@ namespace MalisItemFinder
             string character = SearchView.GetCharacter();
             IEnumerable<string> searchTerms = SearchView.GetKeywords();
             Dictionary<FilterCriteria, List<SearchCriteria>> criterias = SearchView.GetCriterias();
-            int maxElements = TableView.ItemScrollList.Count;
+            int maxElements = MaxElements;
             SearchInProgress = true;
 
             Task.Run(() =>

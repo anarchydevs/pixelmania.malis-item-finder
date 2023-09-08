@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using static MalisItemFinder.MainWindow;
 
 namespace MalisItemFinder
 {
@@ -15,7 +14,6 @@ namespace MalisItemFinder
         private List<ItemEntryView> _itemEntries;
         private View _localRoot;
         private View _itemEntryRoot;
-        public int Count = 50;
         private int _displayedItems;
 
         public ItemScrollListView(View root)
@@ -24,7 +22,15 @@ namespace MalisItemFinder
             _localRoot.FindChild("ItemEntryRoot", out _itemEntryRoot);
             _itemEntries = new List<ItemEntryView>();
 
-            for (int i = 0; i < Count; i++)
+            CacheItemViews();
+        }
+
+        internal void CacheItemViews()
+        {
+            Dispose();
+            _itemEntries.Clear();
+
+            for (int i = 0; i < Main.MainWindow.MaxElements; i++)
             {
                 int color = i % 2 == 0 ? Colors.DarkGrey : Colors.LightGrey;
                 _itemEntries.Add(new ItemEntryView((uint)color, this));
@@ -60,11 +66,11 @@ namespace MalisItemFinder
             {
                 if (itemIndex >= _displayedItems)
                 {
-                    var itemEntry = _itemEntries[itemIndex % Count];
+                    var itemEntry = _itemEntries[itemIndex % Main.MainWindow.MaxElements];
                     _itemEntryRoot.AddChild(itemEntry.Root, true);
                 }
 
-                var updatedItemEntry = _itemEntries[itemIndex % Count];
+                var updatedItemEntry = _itemEntries[itemIndex % Main.MainWindow.MaxElements];
                 updatedItemEntry.Update(matchingItem);
                 itemIndex++;
             }

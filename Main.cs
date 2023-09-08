@@ -52,7 +52,7 @@ namespace MalisItemFinder
             ItemScanner = new ItemScanner();
             Database = new Database();
           
-            Chat.RegisterCommand("miftoggle", (string command, string[] param, ChatWindow chatWindow) =>
+            Chat.RegisterCommand("mif", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 ToggleMainWindow();
             });

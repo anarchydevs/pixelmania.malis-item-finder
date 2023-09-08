@@ -24,7 +24,7 @@ namespace MalisItemFinder
             if (Window.FindView("Text", out TextView textView))
             {
                 textView.Text = $"\n\n" +
-                $"- /miftoggle - Toggles UI\n" +
+                $"- /mif - Toggles UI\n" +
                 $"- /mifdelete 'name' - Deletes char from db\n" + 
                 $"- /mifpreview - Toggles item preview\n\n" +
                 $"- Items update automatically\n\n" +

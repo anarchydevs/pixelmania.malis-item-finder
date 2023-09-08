@@ -27,7 +27,7 @@ public static class DatabaseProcessor
     {
         if (_resetTableView)
         {
-            Main.MainWindow.ItemLookup();
+            Main.MainWindow.Refresh();
             _resetTableView = false;
         }
 
