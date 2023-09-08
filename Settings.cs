@@ -11,46 +11,40 @@ using System.Linq;
 
 namespace MalisItemFinder
 {
-    public class Settings : Json<Settings>
+    public class Settings
     {
         public bool ItemPreview { get; set; }
         public bool ShowTutorial { get; set; }
 
-        public Settings(string path) : base(path) => Load();
+        private string _path;
 
-        public void Save() => Save(this);
-
-        protected override void OnLoad(Settings loadedSettings)
-        {
-            ItemPreview = loadedSettings.ItemPreview;
-            ShowTutorial = loadedSettings.ShowTutorial;
-        }
-    }
-
-    public class Json<T>
-    {
-        protected readonly string _path;
-
-        public Json(string path)
+        public Settings(string path)
         {
             _path = path;
+            Load();
         }
 
-        public virtual void Load()
+        private void Load()
         {
             if (File.Exists(_path))
             {
-                T loadedSettings = JsonConvert.DeserializeObject<T>(File.ReadAllText(_path));
-                OnLoad(loadedSettings);
+                string json = File.ReadAllText(_path);
+                Settings settings = JsonConvert.DeserializeObject<Settings>(json);
+
+                ItemPreview = settings.ItemPreview; 
+                ShowTutorial = settings.ShowTutorial;   
             }
             else
             {
-                Chat.WriteLine("File not found");
+                ItemPreview = true;
+                ShowTutorial = true;
             }
         }
 
-        public virtual void Save(T settings) => File.WriteAllText(_path, JsonConvert.SerializeObject(settings));
-
-        protected virtual void OnLoad(T loadedSettings) { }
+        public void Save()
+        {
+            string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(_path, json);
+        }
     }
 }
