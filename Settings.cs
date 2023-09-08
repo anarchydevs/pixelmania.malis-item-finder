@@ -13,38 +13,45 @@ namespace MalisItemFinder
 {
     public class Settings
     {
-        public bool ItemPreview { get; set; }
-        public bool ShowTutorial { get; set; }
+        public bool ItemPreview;
+        public bool ShowTutorial;
 
+        [JsonIgnore]
         private string _path;
 
         public Settings(string path)
         {
             _path = path;
-            Load();
         }
 
-        private void Load()
+        internal void Load()
         {
-            if (File.Exists(_path))
+            try
             {
-                string json = File.ReadAllText(_path);
-                Settings settings = JsonConvert.DeserializeObject<Settings>(json);
+                if (File.Exists(_path))
+                {
+                    Settings settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(_path));
+                    ItemPreview = settings.ItemPreview;
+                    ShowTutorial = settings.ShowTutorial;
+                    return;
+                }
 
-                ItemPreview = settings.ItemPreview; 
-                ShowTutorial = settings.ShowTutorial;
-                return;
+                string directoryPath = Path.GetDirectoryName(_path);
+
+                if (!Directory.Exists(directoryPath))
+                    Directory.CreateDirectory(directoryPath);
+
+                ItemPreview = true;
+                ShowTutorial = true;
+
             }
-            string directoryPath = Path.GetDirectoryName(_path);
-
-            if (!Directory.Exists(directoryPath))
-                Directory.CreateDirectory(directoryPath);
-
-            ItemPreview = true;
-            ShowTutorial = true;
+            catch (Exception ex)
+            {
+                Chat.WriteLine(ex.Message);
+            }
         }
 
-        public void Save()
+        internal void Save()
         {
             string json = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(_path, json);

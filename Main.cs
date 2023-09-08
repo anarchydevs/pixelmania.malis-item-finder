@@ -31,13 +31,12 @@ namespace MalisItemFinder
 
         public override void Run(string pluginDir)
         {
-            //Inventory.Find("XLarge Backpack - MA", out Item s);
-            //Chat.WriteLine(s.UniqueIdentity);
             Chat.WriteLine("- Mali's Item Finder -", ChatColor.Gold);
 
             PluginDir = pluginDir;
 
             Settings = new Settings($"{PluginDir}\\JSON\\Settings.json");
+            Settings.Load();
             AppDomain.CurrentDomain.AssemblyResolve += AssemblyHelper.ResolveAssemblyOnCurrentDomain;
 
             ToggleMainWindow();
@@ -51,7 +50,7 @@ namespace MalisItemFinder
 
             ItemScanner = new ItemScanner();
             Database = new Database();
-          
+
             Chat.RegisterCommand("mif", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 ToggleMainWindow();
