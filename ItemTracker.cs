@@ -50,6 +50,9 @@ namespace MalisItemFinder
         {
             try
             {
+                if (args.Container.Type == IdentityType.Corpse)
+                    return;
+
                 switch (args.Container.Type)
                 {
                     case IdentityType.Bank:
@@ -206,10 +209,14 @@ namespace MalisItemFinder
             var target = _targetMap.FirstOrDefault(x => x.PacketIdentity == msg.Target);
 
             if (source == null || target == null)
-                return;
-
-            Main.Database.RegisterContainer(source.ContainerId);
-            Main.Database.RegisterContainer(target.ContainerId);
+            {
+                Main.Database.RegisterInventory(); // null means it's not a inventory container (most likely a corpse)
+            }
+            else
+            {
+                Main.Database.RegisterContainer(source.ContainerId);
+                Main.Database.RegisterContainer(target.ContainerId);
+            }
 
             _sourceMap.Remove(source);
             _targetMap.Remove(target);

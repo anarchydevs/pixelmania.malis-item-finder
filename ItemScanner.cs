@@ -29,10 +29,10 @@ namespace MalisItemFinder
 
             Game.OnUpdate += OnUpdate;
 
-            if (!Utils.BankIsNearby(out _))
+            if (!Inventory.Bank.IsOpen)
             {
-                Chat.WriteLine("Bank not found. Scanning inventory / gmi.");
-                ScanRest();
+                Chat.WriteLine("Bank not open. Scanning inventory / gmi.");
+                ScanInventoryAndGmi();
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace MalisItemFinder
         {
             if (_state == BankScannerState.Idle)
             {
-                ScanRest();
+                ScanInventoryAndGmi();
                 Game.OnUpdate -= OnUpdate;
                 return;
             }
@@ -79,9 +79,6 @@ namespace MalisItemFinder
 
         private void FinishOpeningBank()
         {
-            if (!Inventory.Bank.IsOpen)
-                return;
-
             _remainingContainers = Inventory.Bank.Items.Where(x => x.UniqueIdentity.Type == IdentityType.Container).ToList();
 
             _state = BankScannerState.InitMovingToInventory;
@@ -104,7 +101,6 @@ namespace MalisItemFinder
                 _state = BankScannerState.Idle;
                 Chat.WriteLine($"Registering inventory with containers.");
 
-                Main.Database.RegisterInventory();
                 return;
             }
 
@@ -158,7 +154,7 @@ namespace MalisItemFinder
             _state = BankScannerState.InitMovingToInventory;
         }
 
-        private void ScanRest()
+        private void ScanInventoryAndGmi()
         {
             Main.Database.RegisterInventory();
             Inventory.Items.PeekBags();

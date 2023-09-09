@@ -234,6 +234,7 @@ namespace MalisItemFinder
                 Chat.WriteLine("RegisterItems");
             }
         }
+
         private void RegisterItems(SqliteContext db, CharacterInventory charInv, ContainerId containerId, IEnumerable<Item> itemList)
         {
             try
