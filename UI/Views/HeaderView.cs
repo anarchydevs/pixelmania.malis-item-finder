@@ -21,15 +21,19 @@ namespace MalisItemFinder
             Current = new HeaderButton();
             _cached = new HeaderButton();
 
-            if (Root.FindChild("Name", out Button name)) { SetButtonParams(name, OrderMode.Name); }
+            if (Root.FindChild("Empty1", out Button empty1)) { empty1.SetAllGfx(TextureId.HeaderEmpty1); };
+         
+            if (Root.FindChild("Name", out Button name)) { SetButtonParams(name, OrderMode.Name,TextureId.HeaderName); }
 
-            if (Root.FindChild("Id", out Button id)) { SetButtonParams(id, OrderMode.Id); }
+            if (Root.FindChild("Id", out Button id)) { SetButtonParams(id, OrderMode.Id, TextureId.HeaderId); }
 
-            if (Root.FindChild("Ql", out Button ql)) { SetButtonParams(ql, OrderMode.Ql); }
+            if (Root.FindChild("Ql", out Button ql)) { SetButtonParams(ql, OrderMode.Ql, TextureId.HeaderQl); }
 
-            if (Root.FindChild("Location", out Button location)) { SetButtonParams(location, OrderMode.Location); }
+            if (Root.FindChild("Location", out Button location)) { SetButtonParams(location, OrderMode.Location, TextureId.HeaderLocation); }
 
-            if (Root.FindChild("Character", out Button character)) { SetButtonParams(character, OrderMode.Character); }
+            if (Root.FindChild("Character", out Button character)) { SetButtonParams(character, OrderMode.Character, TextureId.HeaderCharacter); }
+
+            if (Root.FindChild("Empty2", out Button empty2)) { empty2.SetAllGfx(TextureId.HeaderEmpty2); };
 
         }
 
@@ -47,9 +51,10 @@ namespace MalisItemFinder
             return true;
         }
 
-        private void SetButtonParams(Button button, OrderMode mode)
+        private void SetButtonParams(Button button, OrderMode mode, int gfxId)
         {
             button.Tag = mode;
+            button.SetAllGfx(gfxId);
             button.Clicked = OnButtonClick;
         }
 

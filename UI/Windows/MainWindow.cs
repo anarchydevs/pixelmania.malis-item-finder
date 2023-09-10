@@ -100,6 +100,13 @@ namespace MalisItemFinder
         internal const int HelpBackground = 1525835;
         internal const int InfoButton = 1525836;
         internal const int CloseButton = 1525837;
+        internal const int HeaderEmpty1 = 1525838;
+        internal const int HeaderName = 1525839;
+        internal const int HeaderId = 1525840;
+        internal const int HeaderQl = 1525841;
+        internal const int HeaderLocation = 1525842;
+        internal const int HeaderCharacter = 1525843;
+        internal const int HeaderEmpty2 = 1525844;
     }
 
     internal static class Colors

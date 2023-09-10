@@ -8,7 +8,7 @@
 				<Button layout_borders="Rect(0,0,2,0)" name="ScanButton" />
 				<TextView layout_borders="Rect(2,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x0089C476" name="ContainerQueue"/>
 				<HLayoutSpacer/>
-				<ComboBox bg_gfx="GFX_GUI_TAB_BACKGROUND" alpha ="0" name="Dropdown" feature_flags="TVF_RENDER_SHADOW" font="BOLD" min_size="Point(100, 15)" color="0x0089C476" max_size="Point(100, 15)" layout_borders="Rect(0,0,4,0)"/>
+				<ComboBox name="Dropdown" feature_flags="TVF_RENDER_SHADOW" font="BOLD" min_size="Point(100, 15)" color="0x0089C476" max_size="Point(100, 15)" layout_borders="Rect(0,0,4,0)"/>
 			</View>
 		</View>
 	</View>

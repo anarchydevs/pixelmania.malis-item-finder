@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using static MalisItemFinder.Database;
 
 namespace MalisItemFinder
@@ -84,9 +85,37 @@ namespace MalisItemFinder
        
         public static void SetAllGfx(this Button button, int gfxId)
         {
-            button.SetGfx(ButtonState.Raised, gfxId);
-            button.SetGfx(ButtonState.Hover, gfxId);
-            button.SetGfx(ButtonState.Pressed, gfxId);
+            ButtonState[] buttonStates = new ButtonState[3] { ButtonState.Raised, ButtonState.Pressed, ButtonState.Hover};
+           
+            button.SetAlpha(2);
+           
+            foreach (var buttonState in buttonStates)
+            {
+                button.SetGfx(buttonState, gfxId);
+                button.SetColorOverride(0xCCFFAA);
+
+                if (buttonState == ButtonState.Raised)
+                {
+                    button.SetBorderColor(0xFFFFFF, buttonState);
+                }
+                else if (buttonState == ButtonState.Pressed)
+                {
+                    button.SetBorderColor(0xBBFFBB, buttonState);
+                }
+            }
+        }
+
+        [DllImport("GUI.dll", EntryPoint = "?GetBorderView@Button_c@@QAEPAVBorderView_c@@W4StateID_e@1@@Z", CallingConvention = CallingConvention.ThisCall)]
+        public static extern IntPtr GetBorderView(IntPtr pThis, ButtonState buttonState);
+
+        public static void SetBorderColor(this Button button, uint color, ButtonState state)
+        {
+            IntPtr ptr = GetBorderView(button.Pointer, state);
+
+            if (ptr == IntPtr.Zero)
+                return;
+
+            View_c.SetColor(ptr, color);
         }
 
         public static void SetText(this ComboBox comboBox, string text) => TextInputView_c.SetText(comboBox.Pointer, StdString.Create(text).Pointer);
