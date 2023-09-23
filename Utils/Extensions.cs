@@ -108,14 +108,10 @@ namespace MalisItemFinder
         [DllImport("GUI.dll", EntryPoint = "?GetBorderView@Button_c@@QAEPAVBorderView_c@@W4StateID_e@1@@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern IntPtr GetBorderView(IntPtr pThis, ButtonState buttonState);
        
-        [DllImport("GUI.dll", EntryPoint = "?DeleteItem@ComboBox_c@@QAEXI@Z", CallingConvention = CallingConvention.ThisCall)]
-        public static extern int DeleteItem(IntPtr pThis, int value);
+        [DllImport("GUI.dll", EntryPoint = "?Clear@ComboBox_c@@QAEXXZ", CallingConvention = CallingConvention.ThisCall)]
+        public static extern int Clear(IntPtr pThis);
 
-        public static void ClearList(this ComboBox comboBox)
-        {
-            for (int i = 0; i < 100; i++)
-                DeleteItem(comboBox.Pointer, i);
-        }
+        public static void Clear(this ComboBox comboBox) => Clear(comboBox.Pointer);
 
         public static void SetBorderColor(this Button button, uint color, ButtonState state)
         {

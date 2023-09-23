@@ -74,7 +74,7 @@ namespace MalisItemFinder
 
         internal void RefreshComboBox() 
         {
-            _comboBoxView.ClearList();
+            _comboBoxView.Clear();
 
             var chars = Main.Database.GetAllCharacters();
 
