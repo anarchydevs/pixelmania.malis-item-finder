@@ -20,6 +20,7 @@ namespace MalisItemFinder
         internal bool SearchInProgress;
         internal List<Slot> SearchResults;
         internal int MaxElements = 50;
+        private AutoResetInterval _autoResetInterval = new AutoResetInterval(100);
 
         public MainWindow(string name, string path, WindowStyle windowStyle = WindowStyle.Popup, WindowFlags flags = WindowFlags.AutoScale | WindowFlags.NoFade) : base(name, path, windowStyle, flags)
         {
@@ -51,6 +52,9 @@ namespace MalisItemFinder
 
         public void OnUpdate(object sender, float e)
         {
+            if (!_autoResetInterval.Elapsed)
+                return;
+
             SearchView.OnUpdate();
             TableView.OnUpdate();
 

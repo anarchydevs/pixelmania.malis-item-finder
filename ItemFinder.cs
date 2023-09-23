@@ -196,6 +196,8 @@ namespace MalisItemFinder
                 return;
             }
 
+            Chat.WriteLine($"Moving bag ({_itemToFind.ItemContainer.ContainerInstance}) to from bank to inventory.");
+
             itemSource.MoveToInventory(); 
             
             _state = ItemFinderState.InitItemIsInInventoryContainerState;
