@@ -47,6 +47,9 @@ namespace MalisItemFinder
 
         public void OnUpdate(object sender, float e)
         {
+            if (DatabaseProcessor.IsOccupied())
+                return;
+
             if (_state == BankScannerState.Idle)
             {
                 ScanInventoryAndGmi();
