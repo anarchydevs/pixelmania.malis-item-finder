@@ -25,8 +25,9 @@ namespace MalisItemFinder
             {
                 textView.Text = $"\n\n" +
                 $"- /mif - Toggles UI\n" +
-                $"- /mifdelete 'name' - Deletes char from db\n" + 
-                $"- /mifpreview - Toggles item preview\n\n" +
+                $"- /mifdelete 'name' - Deletes char from db\n" +
+                $"- /mifpreview - Toggles item preview\n" +
+                $"- /mifrefresh - Refreshes character list\n\n" +
                 $"- Items update automatically\n\n" +
                 $"- Database created with MEF\n\n" +
                 $"- Click headers to order by name / loc / id\n\n" +

@@ -36,7 +36,7 @@ namespace MalisItemFinder
                 case N3MessageType.Trade:
                 case N3MessageType.ContainerAddItem:
                 case N3MessageType.MarketSend:
-                    _events.Add(new N3MessageEvent(n3Msg, 5));
+                    _events.Add(new N3MessageEvent(n3Msg, 15));
                     break;
                 case N3MessageType.CharacterAction:
                     var charMsg = ((CharacterActionMessage)n3Msg).Action;

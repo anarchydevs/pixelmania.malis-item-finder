@@ -54,12 +54,27 @@ namespace MalisItemFinder
             Chat.RegisterCommand("mif", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 ToggleMainWindow();
+            }); 
+            
+            
+            Chat.RegisterCommand("mifrefresh", (string command, string[] param, ChatWindow chatWindow) =>
+            {
+                MainWindow.SearchView.RefreshComboBox();
             });
+
 
             Chat.RegisterCommand("mifpreview", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 Settings.ItemPreview = !Settings.ItemPreview;
                 Settings.Save();
+            });
+
+            Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>
+            {
+                if (param.Length == 1 && Database.TryDeleteInventory(param[0]))
+                {
+                    Chat.WriteLine($"Character Inventory {param[0]} deleted");
+                }
             });
 
             Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>

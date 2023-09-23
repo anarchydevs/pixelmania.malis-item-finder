@@ -71,7 +71,24 @@ namespace MalisItemFinder
         public string GetCharacter() => _comboBoxView.GetText();
 
         public Dictionary<FilterCriteria, List<SearchCriteria>> GetCriterias() => _criterias;
-       
+
+        internal void RefreshComboBox() 
+        {
+            _comboBoxView.ClearList();
+
+            var chars = Main.Database.GetAllCharacters();
+
+            if (chars == null)
+                return;
+
+            if (!chars.Contains(DynelManager.LocalPlayer.Name))
+                return;
+
+            _comboBoxView.AppendItem(0, "All");
+
+            for (int i = 0; i < chars.Count; i++)
+                _comboBoxView.AppendItem(i + 1, chars[i]);
+        }
 
         private void ParseText(string text)
         {
@@ -150,18 +167,7 @@ namespace MalisItemFinder
 
             try
             {
-                var chars = Main.Database.GetAllCharacters();
-
-                if (chars == null)
-                    return;
-
-                if (!chars.Contains(DynelManager.LocalPlayer.Name))
-                    return;
-
-                _comboBoxView.AppendItem(0, "All");
-
-                for (int i = 0; i < chars.Count; i++)
-                    _comboBoxView.AppendItem(i + 1, chars[i]);
+               RefreshComboBox();
 
                 _comboBoxLoaded = true;
             }
