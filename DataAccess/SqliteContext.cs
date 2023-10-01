@@ -34,18 +34,11 @@ namespace EFDataAccessLibrary.Models
         {
             builder.UseSqlite($"Data Source={_path}", option =>
             {
-             //   option.MigrationsAssembly($"{Main.PluginDir}");
             });      
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<ItemContainer>()
-            //    .HasOne(x => x.CharacterInventory)
-            //    .WithMany(x => x.ItemContainers)
-            //    .HasForeignKey(x => x.CharacterInventoryId)
-            //    .OnDelete(DeleteBehavior.Cascade);
-
             base.OnModelCreating(modelBuilder);
         }
     }

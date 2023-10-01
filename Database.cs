@@ -170,12 +170,17 @@ namespace MalisItemFinder
 
         internal void RegisterGMI()
         {
-            GMI.GetInventory().ContinueWith(marketInventory =>
+            GMI.GetInventory()?.ContinueWith(marketInventory =>
             {
+                var result = marketInventory.Result;
+
+                if (result == null)
+                    return;
+
                 DatabaseProcessor.AddChange(new DatabaseAction
                 {
                     Name = "RegisterGMI",
-                    Action = (db, charInv) => RegisterItems(db, charInv, ContainerId.GMI, marketInventory.Result.Items.DeepClone())
+                    Action = (db, charInv) => RegisterItems(db, charInv, ContainerId.GMI, result.Items.DeepClone())
                 });
             });
         }
