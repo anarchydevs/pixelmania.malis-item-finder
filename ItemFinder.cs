@@ -19,8 +19,8 @@ namespace MalisItemFinder
         public ItemFinder(Slot itemToFind)
         {
             _itemToFind = itemToFind;
-            Game.OnUpdate += OnUpdate;
             Query();
+            Game.OnUpdate += OnUpdate;
         }
 
         internal void Query()
@@ -47,9 +47,6 @@ namespace MalisItemFinder
 
                 switch (_itemToFind.ItemInfo.Slot.ItemContainer.Root)
                 {
-                    //case ContainerId.Inventory:
-                    //    Chat.WriteLine("Item is already located in your inventory.");
-                    //    return;
                     case ContainerId.ArmorPage:
                     case ContainerId.WeaponPage:
                     case ContainerId.SocialPage:
@@ -69,7 +66,6 @@ namespace MalisItemFinder
                 Chat.WriteLine(ex.Message);
                 Chat.WriteLine("Query");
             }
-
         }
 
         internal void OnUpdate(object sender, float e)

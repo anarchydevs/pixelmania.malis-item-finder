@@ -27,9 +27,7 @@ namespace MalisItemFinder
                 return;
             }
 
-            Game.OnUpdate += OnUpdate;
-
-            if (!Inventory.Bank.IsOpen)
+            if (!Utils.TryOpenBank())
             {
                 Chat.WriteLine("Bank not open. Scanning inventory / gmi.");
                 ScanInventoryAndGmi();
@@ -43,6 +41,7 @@ namespace MalisItemFinder
             }
 
             _state = BankScannerState.InitOpeningBank;
+            Game.OnUpdate += OnUpdate;
         }
 
         public void OnUpdate(object sender, float e)

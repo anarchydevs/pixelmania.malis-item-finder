@@ -42,10 +42,21 @@ namespace MalisItemFinder
             if (Inventory.Find("Portable Bank Terminal", out _))
                 return true;
 
-
             dynel = FindNearestBankDynel();
 
-            return dynel != null && Vector3.Distance(DynelManager.LocalPlayer.Position, dynel.Position) < 3f;
+            if (Vector3.Distance(DynelManager.LocalPlayer.Position, dynel.Position) > 3f)
+            {
+                Chat.WriteLine("Bank is too far away, cancelling action.");
+                return false;
+            }
+
+            if (dynel == null)
+            {
+                Chat.WriteLine("Could not find bank terminal, cancelling action.");
+                return false;
+            }
+
+            return true;
         }
 
         public static bool TryOpenBank()
