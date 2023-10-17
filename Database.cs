@@ -156,6 +156,17 @@ namespace MalisItemFinder
             Action = (db, charInv) => RemoveMissingBags(db, charInv, rootContainerId, missingContainerIds)
         });
 
+        internal void FixBackpackRoots(ContainerId rootId) => DatabaseProcessor.AddChange(new DatabaseAction
+        {
+            Name = "FixBackpackRoots",
+            Action = (db, charInv) => FixBackpackRoots(db, charInv, rootId,
+                rootId == ContainerId.Inventory ?
+                Inventory.Backpacks.Select(x => (ContainerId)x.Identity.Instance) :
+                rootId == ContainerId.Bank ?
+                Inventory.Bank.Backpacks.Select(x => (ContainerId)x.Identity.Instance) :
+                new List<ContainerId>())
+        });
+
         internal void RemoveMissingBags(SqliteContext db, CharacterInventory charInv, ContainerId containerId, List<ContainerId> identities)
         {
             var containers = charInv.ItemContainers.Where(x => x.Root == containerId && identities.Contains(x.ContainerInstance));
@@ -183,6 +194,22 @@ namespace MalisItemFinder
                     Action = (db, charInv) => RegisterItems(db, charInv, ContainerId.GMI, result.Items.DeepClone())
                 });
             });
+        }
+
+        private void FixBackpackRoots(SqliteContext db, CharacterInventory charInv, ContainerId rootId, IEnumerable<ContainerId> containerIds)
+        {
+            foreach (var containerId in containerIds)
+            {
+                ItemContainer container = charInv.ItemContainers.FirstOrDefault(x => x.ContainerInstance == containerId);
+
+                if (container == null)
+                    continue;
+
+                if (container.Root == rootId)
+                    continue;
+
+                container.Root = rootId;
+            }
         }
 
         private void RegisterInventory(SqliteContext db, CharacterInventory charInv, Dictionary<IdentityType, List<Item>> items)

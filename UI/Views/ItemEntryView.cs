@@ -75,6 +75,11 @@ namespace MalisItemFinder
             if (!Main.Settings.ItemPreview)
                 return;
 
+            AddItem();
+        }
+
+        internal void AddItem()
+        {
             if (!DummyItem.CreateDummyItemID(_itemLookup.ItemInfo.LowInstance, _itemLookup.ItemInfo.HighInstance, _itemLookup.ItemInfo.Ql, out _dummyItemId))
                 return;
 

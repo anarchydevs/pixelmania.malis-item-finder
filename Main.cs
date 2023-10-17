@@ -60,29 +60,31 @@ namespace MalisItemFinder
             Chat.RegisterCommand("mifrefresh", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 MainWindow.SearchView.RefreshComboBox();
+                Chat.WriteLine("Refreshed character list.");
             });
-
 
             Chat.RegisterCommand("mifpreview", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 Settings.ItemPreview = !Settings.ItemPreview;
                 Settings.Save();
+                MainWindow.TableView.ItemScrollList.RefreshItemPreviews();
+                Chat.WriteLine("Toggled item preview.");
             });
 
             Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 if (param.Length == 1 && Database.TryDeleteInventory(param[0]))
-                {
-                    Chat.WriteLine($"Character Inventory {param[0]} deleted");
-                }
+                    Chat.WriteLine($"Character Inventory {param[0]} deleted.");
             });
 
-            Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>
+            Chat.RegisterCommand("miffixroots", (string command, string[] param, ChatWindow chatWindow) =>
             {
-                if (param.Length == 1 && Database.TryDeleteInventory(param[0]))
-                {
-                    Chat.WriteLine($"Character Inventory {param[0]} deleted");
-                }
+                Database.FixBackpackRoots(ContainerId.Inventory);
+
+                if (Inventory.Bank.IsOpen)
+                    Database.FixBackpackRoots(ContainerId.Bank);
+
+                Chat.WriteLine("Fixing container roots.");
             });
         }
 

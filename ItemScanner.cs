@@ -46,12 +46,11 @@ namespace MalisItemFinder
 
         public void OnUpdate(object sender, float e)
         {
-            //if (DatabaseProcessor.IsOccupied())
-            //    return;
-
             if (_state == BankScannerState.Idle)
             {
                 ScanInventoryAndGmi();
+                Main.Database.FixBackpackRoots(ContainerId.Bank);
+                Main.Database.FixBackpackRoots(ContainerId.Inventory);
                 Game.OnUpdate -= OnUpdate;
                 return;
             }

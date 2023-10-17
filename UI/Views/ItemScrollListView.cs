@@ -55,9 +55,26 @@ namespace MalisItemFinder
             SelectedItem = null;
         }
 
+        internal void RefreshItemPreviews()
+        {
+            if (!Main.Settings.ItemPreview)
+            {
+                foreach (var itemEntry in _itemEntries)
+                    itemEntry.RemoveItem();
+            }
+            else
+            {
+                foreach (var itemEntry in _itemEntries)
+                    itemEntry.AddItem();
+            }
+        }
+
         internal void Refresh()
         {
             var header = Main.MainWindow.TableView.Header.Current;
+
+            if (Main.MainWindow.SearchResults == null)
+                return;
 
             Main.MainWindow.SearchResults.ApplyOrder(header.Mode, header.Direction);
             int itemIndex = 0;
