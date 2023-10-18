@@ -83,6 +83,8 @@ namespace MalisItemFinder
             if (!Inventory.Bank.IsOpen)
                 return;
 
+            Main.Database.RegisterBank();
+
             _remainingContainers = Inventory.Bank.Items.Where(x => x.UniqueIdentity.Type == IdentityType.Container).ToList();
 
             _state = BankScannerState.InitMovingToInventory;
