@@ -48,6 +48,9 @@ namespace MalisItemFinder
         {
             if (_state == BankScannerState.Idle)
             {
+                if (DatabaseProcessor.IsOccupied())
+                    return;
+
                 ScanInventoryAndGmi();
                 Main.Database.FixBackpackRoots(ContainerId.Bank);
                 Main.Database.FixBackpackRoots(ContainerId.Inventory);

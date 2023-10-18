@@ -36,6 +36,10 @@ namespace MalisItemFinder
 
                 LoadDb();
                 RegisterInventory();
+
+                if (Inventory.Bank.IsOpen)
+                    RegisterBank();
+
                 RegisterGMI();
             }
             catch (Exception ex)
