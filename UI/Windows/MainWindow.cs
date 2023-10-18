@@ -83,7 +83,8 @@ namespace MalisItemFinder
 
             Task.Run(() =>
             {
-                SearchResults = Main.Database.ItemLookup(character, searchTerms, criterias, maxElements);
+                SearchResults = Main.Database.ItemLookup(character, searchTerms, criterias, maxElements, out int totalResults);
+                SearchView.UpdateTotalResults(totalResults);
                 SearchInProgress = false;
             });
         }

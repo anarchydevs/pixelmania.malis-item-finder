@@ -19,6 +19,9 @@ namespace MalisItemFinder
         private TextView _containerQueue;
         private string _containerQueueCache;
 
+        private TextView _totalResults;
+        private string _totalResultsCache;
+
         private ComboBox _comboBoxView;
         private bool _comboBoxLoaded = false;
         private string _comboBoxTextCache = "";
@@ -40,6 +43,11 @@ namespace MalisItemFinder
             if (Root.FindChild("SearchBar", out _searchView))
             {
                 _searchViewTextCache = _searchView.Text;
+            }
+
+            if (Root.FindChild("TotalResults", out _totalResults))
+            {
+                _totalResultsCache = _totalResults.Text;
             }
 
             if (Root.FindChild("SearchButton", out Button search))
@@ -184,6 +192,15 @@ namespace MalisItemFinder
         {
             OnComboBoxUpdate();
             OnContainerQueueUpdate();
+            OnTotalResultsUpdate();
+        }
+
+        private void OnTotalResultsUpdate()
+        {
+            if (_totalResultsCache == _totalResults.Text)
+                return;
+
+            _totalResults.Text = _totalResultsCache;
         }
 
         private void OnContainerQueueUpdate()
@@ -214,6 +231,8 @@ namespace MalisItemFinder
 
             return true;
         }
+
+        public void UpdateTotalResults(int results) => _totalResultsCache = results.ToString();
 
         private void SearchClick(object sender, ButtonBase e)
         {

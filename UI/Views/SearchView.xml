@@ -6,8 +6,9 @@
 			<View layout_borders="Rect(4,2,0,0)" view_layout="horizontal">
 				<Button layout_borders="Rect(0,0,2,0)" name="SearchButton" />
 				<Button layout_borders="Rect(0,0,2,0)" name="ScanButton" />
-				<TextView layout_borders="Rect(2,0,0,0)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x0089C476" name="ContainerQueue"/>
+				<TextView layout_borders="Rect(4,0,0,0)" min_size="Point(-1, 15)" max_size="Point(-1, 15)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x00828282" name="ContainerQueue"/>
 				<HLayoutSpacer/>
+				<TextView layout_borders="Rect(0,0,6,0)" min_size="Point(-1, 15)" max_size="Point(-1, 15)"  feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x00BDBDBD" name="TotalResults"/>
 				<ComboBox name="Dropdown" feature_flags="TVF_RENDER_SHADOW" font="BOLD" min_size="Point(100, 15)" color="0x0089C476" max_size="Point(100, 15)" layout_borders="Rect(0,0,4,0)"/>
 			</View>
 		</View>

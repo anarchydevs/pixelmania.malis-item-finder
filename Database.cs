@@ -427,7 +427,7 @@ namespace MalisItemFinder
             }
         }
 
-        public List<Slot> ItemLookup(string character,IEnumerable<string> searchTerms, Dictionary<FilterCriteria, List<SearchCriteria>> criterias, int maxElements)
+        public List<Slot> ItemLookup(string character, IEnumerable<string> searchTerms, Dictionary<FilterCriteria, List<SearchCriteria>> criterias, int maxElements, out int totalResults)
         {
             using (var db = new SqliteContext(Path))
             {
@@ -444,6 +444,7 @@ namespace MalisItemFinder
 
                 slots.ApplyCriteria(criterias);
                 slots.ApplyOrder(header.Mode, header.Direction);
+                totalResults = slots.Count;
 
                 return slots.Take(maxElements).ToList();
             }
