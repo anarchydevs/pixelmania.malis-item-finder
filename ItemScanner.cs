@@ -27,16 +27,16 @@ namespace MalisItemFinder
                 return;
             }
 
-            if (!Utils.TryOpenBank())
+            if (!Utils.BankIsNearby(out Dynel dynel))
             {
-                Chat.WriteLine("Bank not open. Scanning inventory / gmi.");
                 ScanInventoryAndGmi();
                 return;
             }
 
             if (Inventory.NumFreeSlots < 2)
             {
-                Chat.WriteLine("Need at least two inventory slots.");
+                Chat.WriteLine("Need at least two inventory slots for bank scan.");
+                ScanInventoryAndGmi();
                 return;
             }
 
@@ -80,6 +80,9 @@ namespace MalisItemFinder
 
         private void FinishOpeningBank()
         {
+            if (!Inventory.Bank.IsOpen)
+                return;
+
             _remainingContainers = Inventory.Bank.Items.Where(x => x.UniqueIdentity.Type == IdentityType.Container).ToList();
 
             _state = BankScannerState.InitMovingToInventory;
@@ -157,9 +160,12 @@ namespace MalisItemFinder
 
         private void ScanInventoryAndGmi()
         {
+            Chat.WriteLine("Scanning inventory / GMI");
+
             Main.Database.RegisterInventory();
             Inventory.Items.PeekBags();
             Main.Database.RegisterGMI();
+            Chat.WriteLine("Deep scan completed.", ChatColor.Green);
         }
     }
 }

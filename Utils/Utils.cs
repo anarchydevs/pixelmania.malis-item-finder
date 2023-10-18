@@ -44,18 +44,18 @@ namespace MalisItemFinder
 
             dynel = FindNearestBankDynel();
 
-            if (Vector3.Distance(DynelManager.LocalPlayer.Position, dynel.Position) > 3f)
-            {
-                Chat.WriteLine("Bank is too far away, cancelling action.");
-                return false;
-            }
-
             if (dynel == null)
             {
-                Chat.WriteLine("Could not find bank terminal, cancelling action.");
+                Chat.WriteLine("Could not find bank terminal.");
                 return false;
             }
 
+            if (Vector3.Distance(DynelManager.LocalPlayer.Position, dynel.Position) > 3f)
+            {
+                Chat.WriteLine("Bank is too far away.");
+                return false;
+            }
+ 
             return true;
         }
 
