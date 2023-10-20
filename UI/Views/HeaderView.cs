@@ -13,6 +13,8 @@ namespace MalisItemFinder
         public HeaderButton Current;
         public HeaderButton _cached;
         private bool _headerUpdate = false;
+        private Button _emptyHeaderButton1;
+        private Button _emptyHeaderButton2;
 
         public HeaderView(View headerRootView)
         {
@@ -21,8 +23,12 @@ namespace MalisItemFinder
             Current = new HeaderButton();
             _cached = new HeaderButton();
 
-            if (Root.FindChild("Empty1", out Button empty1)) { empty1.SetAllGfx(TextureId.HeaderEmpty1); };
-         
+            if (Root.FindChild("Empty1", out _emptyHeaderButton1)) { };
+
+            if (Root.FindChild("Empty2", out _emptyHeaderButton2)) { };
+
+            RefreshItemPreviews();
+
             if (Root.FindChild("Name", out Button name)) { SetButtonParams(name, OrderMode.Name,TextureId.HeaderName); }
 
             if (Root.FindChild("Id", out Button id)) { SetButtonParams(id, OrderMode.Id, TextureId.HeaderId); }
@@ -32,9 +38,20 @@ namespace MalisItemFinder
             if (Root.FindChild("Location", out Button location)) { SetButtonParams(location, OrderMode.Location, TextureId.HeaderLocation); }
 
             if (Root.FindChild("Character", out Button character)) { SetButtonParams(character, OrderMode.Character, TextureId.HeaderCharacter); }
+        }
 
-            if (Root.FindChild("Empty2", out Button empty2)) { empty2.SetAllGfx(TextureId.HeaderEmpty2); };
-
+        public void RefreshItemPreviews()
+        {
+            if (Main.Settings.ItemPreview)
+            {
+                _emptyHeaderButton1.SetAllGfx(TextureId.HeaderEmpty1);
+                _emptyHeaderButton2.SetAllGfx(TextureId.HeaderEmpty2);
+            }
+            else
+            {
+                _emptyHeaderButton1.SetAllGfx(TextureId.HeaderEmpty2);
+                _emptyHeaderButton2.SetAllGfx(TextureId.HeaderEmpty1);
+            }
         }
 
         public bool TriggerRefresh()

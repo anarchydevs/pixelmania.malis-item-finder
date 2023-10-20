@@ -89,13 +89,12 @@ namespace MalisItemFinder
             if (chars == null)
                 return;
 
-            if (!chars.Contains(DynelManager.LocalPlayer.Name))
-                return;
-
             _comboBoxView.AppendItem(0, "All");
 
             for (int i = 0; i < chars.Count; i++)
+            {
                 _comboBoxView.AppendItem(i + 1, chars[i]);
+            }
         }
 
         private void ParseText(string text)

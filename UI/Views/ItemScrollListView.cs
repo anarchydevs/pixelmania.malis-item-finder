@@ -22,10 +22,10 @@ namespace MalisItemFinder
             _localRoot.FindChild("ItemEntryRoot", out _itemEntryRoot);
             _itemEntries = new List<ItemEntryView>();
 
-            CacheItemViews();
+            RecacheItemViews();
         }
 
-        internal void CacheItemViews()
+        internal void RecacheItemViews()
         {
             Dispose();
             _itemEntries.Clear();
@@ -59,14 +59,33 @@ namespace MalisItemFinder
         {
             if (!Main.Settings.ItemPreview)
             {
+                int i = 1;
+                
                 foreach (var itemEntry in _itemEntries)
-                    itemEntry.RemoveItem();
+                {
+                    if (i <= _displayedItems)
+                        itemEntry.RemoveItem();
+
+                    i++;
+                    itemEntry.RemoveSlotView();
+                }
             }
             else
             {
+                int i = 1;
+
                 foreach (var itemEntry in _itemEntries)
-                    itemEntry.AddItem();
+                {
+                    itemEntry.AddSlotView();
+
+                    if (i <= _displayedItems)
+                        itemEntry.AddItem();
+                    i++;
+                }
             }
+
+            RecacheItemViews();
+            Main.MainWindow.Refresh();
         }
 
         internal void Refresh()
@@ -107,10 +126,20 @@ namespace MalisItemFinder
         
         internal void Dispose()
         {
+            int i = 1;
+
             foreach (var item in _itemEntries)
-                _itemEntryRoot.RemoveChild(item.Root);
+            {
+                if (i <= _displayedItems)
+                    _itemEntryRoot.RemoveChild(item.Root);
+
+                item.Root.Dispose();
+
+                i++;
+            }
 
             _itemEntryRoot.FitToContents();
+            _displayedItems = 0;
         }
     }
 }

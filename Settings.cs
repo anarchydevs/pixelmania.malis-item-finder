@@ -15,6 +15,8 @@ namespace MalisItemFinder
     {
         public bool ItemPreview;
         public bool ShowTutorial;
+        public int PreviewOnMaxElements;
+        public int PreviewOffMaxElements;
 
         [JsonIgnore]
         private string _path;
@@ -33,7 +35,11 @@ namespace MalisItemFinder
                     Settings settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText(_path));
                     ItemPreview = settings.ItemPreview;
                     ShowTutorial = settings.ShowTutorial;
-                    return;
+                    PreviewOnMaxElements = settings.PreviewOnMaxElements;
+                    PreviewOffMaxElements = settings.PreviewOffMaxElements;
+
+                    if (PreviewOnMaxElements != 0 && PreviewOffMaxElements != 0)
+                        return;
                 }
 
                 string directoryPath = Path.GetDirectoryName(_path);
@@ -41,6 +47,8 @@ namespace MalisItemFinder
                 if (!Directory.Exists(directoryPath))
                     Directory.CreateDirectory(directoryPath);
 
+                PreviewOnMaxElements = 50;
+                PreviewOffMaxElements = 100;
                 ItemPreview = true;
                 ShowTutorial = true;
 

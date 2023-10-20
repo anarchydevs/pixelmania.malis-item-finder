@@ -34,10 +34,15 @@ namespace MalisItemFinder
                 ItemScrollList.Refresh();
         }
 
-
         public void Dispose()
         {
             ItemScrollList.Dispose();
+        }
+
+        internal void RefreshItemPreviews()
+        {
+            ItemScrollList.RefreshItemPreviews();
+            Header.RefreshItemPreviews();
         }
     }
 }

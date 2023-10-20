@@ -26,15 +26,17 @@ namespace MalisItemFinder
                 textView.Text = $"\n\n" +
                 $"- /mif - Toggles UI\n" +
                 $"- /mifdelete 'name' - Deletes char from db\n" +
-                $"- /mifpreview - Toggles item preview\n" +
                 $"- /miffixroots - Fixes container roots\n" +
-                $"- /mifrefresh - Refreshes character list\n\n" +
-                $"- Items update automatically\n\n" +
-                $"- Click headers to order by name / loc / id\n\n" +
+                $"- /mifrefresh - Refreshes character list\n" +
+                $"- /mifpreview - Toggles icons (performance)\n" +
+                $"- /miflimit 'num1 num2' - Total results limit\n" +
+                $"  num1 - preview off, num2 - preview on\n\n" +
+                $"- Items update automatically\n" +
+                $"- Click headers to order by name / loc / etc.\n\n" +
                 $"- Search examples:\n" +
                 $"    - mig of t rev\n" +
                 $"    - | ql:10-15 | id:2000+ | loc:backpack\n" +
-                $"    - che imp , ql:99- , id:200+ , loc:bank\n\n\n" +
+                $"    - che imp , ql:99- , id:200+ , loc:bank\n\n" +
                 $"- For bugs / glitches / requests:\n " +
                 $"  Discord:  Pixelmania#0349\n\n" +
                 $"                          ~ Made with AOSharp SDK";

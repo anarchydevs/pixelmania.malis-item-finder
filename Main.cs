@@ -54,8 +54,7 @@ namespace MalisItemFinder
             Chat.RegisterCommand("mif", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 ToggleMainWindow();
-            }); 
-            
+            });     
             
             Chat.RegisterCommand("mifrefresh", (string command, string[] param, ChatWindow chatWindow) =>
             {
@@ -67,14 +66,19 @@ namespace MalisItemFinder
             {
                 Settings.ItemPreview = !Settings.ItemPreview;
                 Settings.Save();
-                MainWindow.TableView.ItemScrollList.RefreshItemPreviews();
-                Chat.WriteLine("Toggled item preview.");
+                MainWindow.RefreshMaxElements();
+                MainWindow.TableView.RefreshItemPreviews();
+                Chat.WriteLine($"Item preview set to: {Settings.ItemPreview}, total result limit changed to: {MainWindow.MaxElements}");
             });
 
             Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>
             {
                 if (param.Length == 1 && Database.TryDeleteInventory(param[0]))
+                {
                     Chat.WriteLine($"Character Inventory {param[0]} deleted.");
+                    MainWindow.Refresh();
+                }
+                MainWindow.SearchView.RefreshComboBox();
             });
 
             Chat.RegisterCommand("miffixroots", (string command, string[] param, ChatWindow chatWindow) =>
@@ -85,6 +89,28 @@ namespace MalisItemFinder
                     Database.FixBackpackRoots(ContainerId.Bank);
 
                 Chat.WriteLine("Fixing container roots.");
+            });
+
+            Chat.RegisterCommand("miflimit", (string command, string[] param, ChatWindow chatWindow) =>
+            {
+                int lowNum = 0;
+                int highNum = 0;
+
+                if (param.Length != 2 || !int.TryParse(param[0], out lowNum) || !int.TryParse(param[1], out highNum))
+                {
+                    Chat.WriteLine($"Invalid command usage, try /miflimit 50 100");
+                    return;
+                }
+
+                Settings.PreviewOnMaxElements = lowNum;
+                Settings.PreviewOffMaxElements = highNum;
+                Settings.Save();
+
+                MainWindow.RefreshMaxElements();
+                MainWindow.TableView.ItemScrollList.RecacheItemViews();
+                MainWindow.Refresh();
+
+                Chat.WriteLine($"Results limit set to {param[0]} (with preview on) and {param[1]} (with preview off).");
             });
         }
 

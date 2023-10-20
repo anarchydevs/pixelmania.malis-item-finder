@@ -19,6 +19,10 @@ namespace MalisItemFinder
         private BitmapView _background;
         private uint _localColor;
         private ItemScrollListView _scrollListView;
+        private View _itemSlotRoot;
+
+        private Vector2 _previewOffSlotSize = new Vector2(13, 24);
+        private Vector2 _previewOnSlotSize = new Vector2(42, 24);
 
         public ItemEntryView(uint color, ItemScrollListView scrollListView)
         {
@@ -26,20 +30,20 @@ namespace MalisItemFinder
             _localColor = color;
             _scrollListView = scrollListView;
 
-            if (Root.FindChild("ItemSlot", out View itemSlot)) { }
+            if (Root.FindChild("ItemSlot", out _itemSlotRoot)) { }
             if (Root.FindChild("Name", out TextView name)) { }
             if (Root.FindChild("Id", out TextView id)) { }
             if (Root.FindChild("Ql", out TextView ql)) { }
             if (Root.FindChild("Location", out TextView location)) { }
             if (Root.FindChild("Character", out TextView character)) { }
             if (Root.FindChild("Button", out Button button)) { button.Clicked = OnEntryClicked; }
-            if (Root.FindChild("Background", out  _background)) 
+            if (Root.FindChild("Background", out _background))
             {
                 _background.SetBitmap(TextureId.ItemEntryBackground);
                 _background.SetLocalColor(_localColor);
             }
 
-            _itemEntryData = new ItemEntryData(itemSlot, name, id, ql, location, character);
+            _itemEntryData = new ItemEntryData(_itemSlotRoot, name, id, ql, location, character);
         }
 
         private void OnEntryClicked(object sender, ButtonBase e)
@@ -83,10 +87,22 @@ namespace MalisItemFinder
             if (!DummyItem.CreateDummyItemID(_itemLookup.ItemInfo.LowInstance, _itemLookup.ItemInfo.HighInstance, _itemLookup.ItemInfo.Ql, out _dummyItemId))
                 return;
 
-            _itemEntryData.AddItem(_dummyItemId);
+            _itemEntryData.AddItem(_dummyItemId); 
         }
 
         internal void RemoveItem() => _itemEntryData.RemoveItem();
+
+        internal void RemoveSlotView()
+        {
+            _itemEntryData.RemoveSlotView();
+            _itemSlotRoot.LimitMaxSize(_previewOffSlotSize);
+        }
+
+        internal void AddSlotView()
+        {
+            _itemEntryData.AddSlotView();
+            _itemSlotRoot.LimitMaxSize(_previewOnSlotSize);
+        }
     }
 
     public class ItemEntryData
@@ -108,6 +124,9 @@ namespace MalisItemFinder
             _character = character;
         }
 
+        internal void RemoveSlotView() => _itemSlot.RemoveSlotView();
+        internal void AddSlotView() => _itemSlot.AddSlotView();
+
         internal void SetText(string name, string id, string ql, string container, string character)
         {
             _name.Text = name;
@@ -125,16 +144,35 @@ namespace MalisItemFinder
     {
         protected MultiListView _slotView;
         protected InventoryListViewItem _itemView = null;
+        protected View _itemSlotRoot;
 
         public ItemEntrySlotView(View itemSlotRoot)
         {
+            _itemSlotRoot = itemSlotRoot;
+            AddSlotView();
+        }
+
+        public void AddSlotView()
+        {
+            if (!Main.Settings.ItemPreview)
+            {
+                _itemSlotRoot.LimitMaxSize(new Vector2(13, 24));
+                return;
+            }
+
             SetupSlotView();
-            itemSlotRoot.AddChild(_slotView, true);
-            itemSlotRoot.FitToContents();
+            _itemSlotRoot.AddChild(_slotView, true);
+            _itemSlotRoot.FitToContents();
+        }
+
+        public void RemoveSlotView()
+        {
+            _itemSlotRoot.RemoveChild(_slotView);
         }
 
         public void SetupSlotView()
         {
+
             _slotView = ItemListViewBase.Create(new Rect(20, 20, 20, 20), 0, 0);
             _slotView.SetGridIconSpacing(new Vector2(6000, 6000));
             _slotView.SetGridIconSize(3);

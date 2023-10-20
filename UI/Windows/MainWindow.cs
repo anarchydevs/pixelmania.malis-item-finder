@@ -19,14 +19,17 @@ namespace MalisItemFinder
         internal TableView TableView;
         internal bool SearchInProgress;
         internal List<Slot> SearchResults;
-        internal int MaxElements = 50;
+        internal int MaxElements;
         private AutoResetInterval _autoResetInterval = new AutoResetInterval(100);
 
         public MainWindow(string name, string path, WindowStyle windowStyle = WindowStyle.Popup, WindowFlags flags = WindowFlags.AutoScale | WindowFlags.NoFade) : base(name, path, windowStyle, flags)
         {
             Utils.LoadCustomTextures($"{Main.PluginDir}\\UI\\Textures\\", 1525831);
             SearchResults = new List<Slot>();
+            RefreshMaxElements();
         }
+
+        internal void RefreshMaxElements() => MaxElements = Main.Settings.ItemPreview ? Main.Settings.PreviewOnMaxElements : Main.Settings.PreviewOffMaxElements;
 
         protected override void OnWindowCreating()
         {
@@ -84,6 +87,7 @@ namespace MalisItemFinder
             Task.Run(() =>
             {
                 SearchResults = Main.Database.ItemLookup(character, searchTerms, criterias, maxElements, out int totalResults);
+
                 SearchView.UpdateTotalResults(totalResults);
                 SearchInProgress = false;
             });

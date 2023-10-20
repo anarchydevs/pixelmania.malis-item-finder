@@ -14,16 +14,16 @@
 			<View>
 				<View view_layout="horizontal" layout_borders="Rect(5,4,4,0)">
 					<Button name="Search"/>
-					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)" value=" - Move Item To Inventory" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
+					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)" font="BOLD" value=" - Move Item To Inventory" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
 				</View>
 				<View view_layout="horizontal" layout_borders="Rect(5,4,4,0)">
-					<Button name="Scan"/>
-					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)" value=" - Deep Scan Inv / Bank / GMI" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
+					<Button name="Scan" layout_borders="Rect(18,0,0,0)"/>
+					<TextView min_size="Point(180,15)" layout_borders="Rect(2,0,2,0)" font="BOLD" value=" - Deep Scan Inv / Bank / GMI" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
 				</View>
 				<View view_layout="horizontal" layout_borders="Rect(5,4,4,0)">
 					<TextView name="Mode" min_size="Point(20,20)" layout_borders="Rect(0,2,0,0)" max_size="Point(20,20)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x00828282" value="0"/>
 					<TextView name="Mode" min_size="Point(23,20)" layout_borders="Rect(0,2,0,0)" max_size="Point(23,20)" feature_flags="TVF_RENDER_SHADOW" font="BOLD" color="0x00BDBDBD" value="432"/>
-					<TextView min_size="Point(205,15)" layout_borders="Rect(2,0,2,0)"  value=" - Database Queue / Results" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
+					<TextView min_size="Point(205,15)" layout_borders="Rect(2,0,2,0)"  font="BOLD"  value=" - Database Queue / Total Results" color="0x00e2e2e2" feature_flags="TVF_RENDER_SHADOW"/>
 				</View>
 			</View>
 			<TextView  layout_borders="Rect(5,2,5,0)" color="0x00e2e2e2" feature_flags="TVF_MULTILINE|TVF_RENDER_SHADOW" name="Text"/>
