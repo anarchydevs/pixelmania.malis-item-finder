@@ -193,6 +193,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="runtimes\win-arm\native\e_sqlite3.dll" />
+    <Content Include="runtimes\win-x64\native\e_sqlite3.dll" />
+    <Content Include="runtimes\win-x86\native\e_sqlite3.dll" />
     <Content Include="Sound\Start.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
