@@ -58,12 +58,24 @@ namespace MalisItemFinder
             
             Chat.RegisterCommand("mifrefresh", (string command, string[] param, ChatWindow chatWindow) =>
             {
+                if (MainWindow == null)
+                {
+                    Chat.WriteLine("Window not open. Cancelling action.");
+                    return;
+                }
+
                 MainWindow.SearchView.RefreshComboBox();
                 Chat.WriteLine("Refreshed character list.");
             });
 
             Chat.RegisterCommand("mifpreview", (string command, string[] param, ChatWindow chatWindow) =>
             {
+                if (MainWindow == null)
+                {
+                    Chat.WriteLine("Window not open. Cancelling action.");
+                    return;
+                }
+
                 Settings.ItemPreview = !Settings.ItemPreview;
                 Settings.Save();
                 MainWindow.RefreshMaxElements();
@@ -73,6 +85,12 @@ namespace MalisItemFinder
 
             Chat.RegisterCommand("mifdelete", (string command, string[] param, ChatWindow chatWindow) =>
             {
+                if (MainWindow == null)
+                {
+                    Chat.WriteLine("Window not open. Cancelling action.");
+                    return;
+                }
+
                 if (param.Length == 1 && Database.TryDeleteInventory(param[0]))
                 {
                     Chat.WriteLine($"Character Inventory {param[0]} deleted.");
@@ -83,6 +101,12 @@ namespace MalisItemFinder
 
             Chat.RegisterCommand("miffixroots", (string command, string[] param, ChatWindow chatWindow) =>
             {
+                if (MainWindow == null)
+                {
+                    Chat.WriteLine("Window not open. Cancelling action.");
+                    return;
+                }
+
                 Database.FixBackpackRoots(ContainerId.Inventory);
 
                 if (Inventory.Bank.IsOpen)
@@ -93,6 +117,12 @@ namespace MalisItemFinder
 
             Chat.RegisterCommand("miflimit", (string command, string[] param, ChatWindow chatWindow) =>
             {
+                if (MainWindow == null)
+                {
+                    Chat.WriteLine("Window not open. Cancelling action.");
+                    return;
+                }
+
                 int lowNum = 0;
                 int highNum = 0;
 
