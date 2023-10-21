@@ -104,6 +104,8 @@ namespace MalisItemFinder
                 }
             }
         }
+        [DllImport("GUI.dll", EntryPoint = "?GetScrolledView@MultiListView_c@@QAEPAVView@@XZ", CallingConvention = CallingConvention.ThisCall)]
+        public static extern IntPtr GetScrolledView(IntPtr pThis);
 
         [DllImport("GUI.dll", EntryPoint = "?GetBorderView@Button_c@@QAEPAVBorderView_c@@W4StateID_e@1@@Z", CallingConvention = CallingConvention.ThisCall)]
         public static extern IntPtr GetBorderView(IntPtr pThis, ButtonState buttonState);
@@ -121,6 +123,18 @@ namespace MalisItemFinder
                 return;
 
             View_c.SetColor(ptr, color);
+        }
+
+        public static void SetMultiListView(this MultiListView multiListView)
+        {
+            IntPtr ptr = GetScrolledView(multiListView.Pointer);
+
+            if (ptr == IntPtr.Zero)
+                return;
+
+            View_c.SetLocalAlpha(ptr, 0);
+            Vector2 refV = new Vector2(1.2f, 1.2f);
+            View_c.ScaleTo(ptr, ref refV);
         }
 
         public static void SetText(this ComboBox comboBox, string text) => TextInputView_c.SetText(comboBox.Pointer, StdString.Create(text).Pointer);

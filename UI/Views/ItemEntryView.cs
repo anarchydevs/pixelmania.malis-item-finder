@@ -172,12 +172,12 @@ namespace MalisItemFinder
 
         public void SetupSlotView()
         {
-
             _slotView = ItemListViewBase.Create(new Rect(20, 20, 20, 20), 0, 0);
             _slotView.SetGridIconSpacing(new Vector2(6000, 6000));
             _slotView.SetGridIconSize(3);
             _slotView.SetLayoutMode(0);
             _slotView.SetViewCellCounts(Vector2.Zero, Vector2.Zero);
+            _slotView.SetMultiListView();
         }
 
         public bool IsSlotEmpty() => _itemView == null;
